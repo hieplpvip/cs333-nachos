@@ -15,14 +15,14 @@ osrelease = $(shell uname -r)
 
 hosttype = unknown
 
-# Test for x86 Linux 
+# Test for x86 Linux
 # !!! COMMENT THE FOLLOWING LINES OUT IF BUILDING FOR SOLARIS HOST !!!
 # !!! ADD PATH TO CPP and CROSS COMPILER
 
 ifeq ($(osname),Linux)
-# full path name of your cpp program i.e.: 
+# full path name of your cpp program i.e.:
 CPP = ../../../usr/local/nachos/lib/gcc-lib/decstation-ultrix/2.95.2/cpp
-# directory in which your gcc cross-compiler lives i.e.: 
+# directory in which your gcc cross-compiler lives i.e.:
 GCCDIR = ../../../usr/local/nachos/bin/decstation-ultrix-
 LDFLAGS = -T script -N
 ASFLAGS = -mips2
@@ -58,6 +58,3 @@ endif
 # COFF2NOFF = ../../coff2noff.mipsUltrix
 #hosttype = MacOS
 #endif
-
-
-
