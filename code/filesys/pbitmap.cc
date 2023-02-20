@@ -1,9 +1,9 @@
-// pbitmap.c 
+// pbitmap.c
 //	Routines to manage a persistent bitmap -- a bitmap that is
 //	stored on disk.
 //
 // Copyright (c) 1992,1993,1995 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
@@ -19,8 +19,7 @@
 //      This constructor does not initialize the bitmap from a disk file
 //----------------------------------------------------------------------
 
-PersistentBitmap::PersistentBitmap(int numItems):Bitmap(numItems) 
-{ 
+PersistentBitmap::PersistentBitmap(int numItems) : Bitmap(numItems) {
 }
 
 //----------------------------------------------------------------------
@@ -35,12 +34,11 @@ PersistentBitmap::PersistentBitmap(int numItems):Bitmap(numItems)
 //      This constructor initializes the bitmap from a disk file
 //----------------------------------------------------------------------
 
-PersistentBitmap::PersistentBitmap(OpenFile *file, int numItems):Bitmap(numItems) 
-{ 
-    // map has already been initialized by the BitMap constructor,
-    // but we will just overwrite that with the contents of the
-    // map found in the file
-    file->ReadAt((char *)map, numWords * sizeof(unsigned), 0);
+PersistentBitmap::PersistentBitmap(OpenFile *file, int numItems) : Bitmap(numItems) {
+  // map has already been initialized by the BitMap constructor,
+  // but we will just overwrite that with the contents of the
+  // map found in the file
+  file->ReadAt((char *)map, numWords * sizeof(unsigned), 0);
 }
 
 //----------------------------------------------------------------------
@@ -48,8 +46,7 @@ PersistentBitmap::PersistentBitmap(OpenFile *file, int numItems):Bitmap(numItems
 // 	De-allocate a persistent bitmap.
 //----------------------------------------------------------------------
 
-PersistentBitmap::~PersistentBitmap()
-{ 
+PersistentBitmap::~PersistentBitmap() {
 }
 
 //----------------------------------------------------------------------
@@ -59,10 +56,8 @@ PersistentBitmap::~PersistentBitmap()
 //	"file" is the place to read the bitmap from
 //----------------------------------------------------------------------
 
-void
-PersistentBitmap::FetchFrom(OpenFile *file) 
-{
-    file->ReadAt((char *)map, numWords * sizeof(unsigned), 0);
+void PersistentBitmap::FetchFrom(OpenFile *file) {
+  file->ReadAt((char *)map, numWords * sizeof(unsigned), 0);
 }
 
 //----------------------------------------------------------------------
@@ -72,8 +67,6 @@ PersistentBitmap::FetchFrom(OpenFile *file)
 //	"file" is the place to write the bitmap to
 //----------------------------------------------------------------------
 
-void
-PersistentBitmap::WriteBack(OpenFile *file)
-{
-   file->WriteAt((char *)map, numWords * sizeof(unsigned), 0);
+void PersistentBitmap::WriteBack(OpenFile *file) {
+  file->WriteAt((char *)map, numWords * sizeof(unsigned), 0);
 }

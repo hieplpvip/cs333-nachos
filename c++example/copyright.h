@@ -24,4 +24,4 @@ PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 static char *copyright = "Copyright (c) 1992,1993,1995 The Regents of the University of California.  All rights reserved.";
 
-#endif  /* COPYRIGHT_H */
+#endif /* COPYRIGHT_H */

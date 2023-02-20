@@ -1,16 +1,15 @@
 // inheritstack.cc
-//	Routines for two implementions of a LIFO stack of integers, 
+//	Routines for two implementions of a LIFO stack of integers,
 //	one as an array, the other as a list.
-//	
+//
 // Copyright (c) 1992,1993,1995 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
-
 
 extern "C" {
 #include <assert.h>
 
-#define ASSERT(expression)  assert(expression)
+#define ASSERT(expression) assert(expression)
 }
 
 const bool FALSE = false;
@@ -30,7 +29,6 @@ const bool TRUE = true;
 Stack::Stack() {}
 Stack::~Stack() {}
 
-
 // IMPLEMENTATION #1: AS AN ARRAY
 
 //----------------------------------------------------------------------
@@ -41,13 +39,12 @@ Stack::~Stack() {}
 //----------------------------------------------------------------------
 
 ArrayStack::ArrayStack(int sz) : Stack() {
+  ASSERT(sz >= 1);
 
-    ASSERT(sz >= 1);
-
-    // Initialize the data members of the stack object.
-    size = sz;
-    top = 0;
-    stack = new int[size];   // allocate an array of integers.
+  // Initialize the data members of the stack object.
+  size = sz;
+  top = 0;
+  stack = new int[size];  // allocate an array of integers.
 }
 
 //----------------------------------------------------------------------
@@ -57,8 +54,7 @@ ArrayStack::ArrayStack(int sz) : Stack() {
 //----------------------------------------------------------------------
 
 ArrayStack::~ArrayStack() {
-
-    delete [] stack;
+  delete[] stack;
 }
 
 //----------------------------------------------------------------------
@@ -68,11 +64,10 @@ ArrayStack::~ArrayStack() {
 //	"value" -- the value to put on the stack
 //----------------------------------------------------------------------
 
-void
-ArrayStack::Push(int value) {
-    ASSERT(!Full());
-    
-    stack[top++] = value;
+void ArrayStack::Push(int value) {
+  ASSERT(!Full());
+
+  stack[top++] = value;
 }
 
 //----------------------------------------------------------------------
@@ -81,12 +76,10 @@ ArrayStack::Push(int value) {
 //	Error if the stack is empty.
 //----------------------------------------------------------------------
 
-int
-ArrayStack::Pop() {
+int ArrayStack::Pop() {
+  ASSERT(!Empty());
 
-    ASSERT(!Empty());
-    
-    return (stack[--top]);
+  return (stack[--top]);
 }
 
 //----------------------------------------------------------------------
@@ -94,9 +87,8 @@ ArrayStack::Pop() {
 // 	Return TRUE if the stack has no more room.
 //----------------------------------------------------------------------
 
-bool
-ArrayStack::Full() {
-    return (top == size);
+bool ArrayStack::Full() {
+  return (top == size);
 }
 
 //----------------------------------------------------------------------
@@ -104,11 +96,9 @@ ArrayStack::Full() {
 // 	Return TRUE if the stack has nothing on it.
 //----------------------------------------------------------------------
 
-bool
-ArrayStack::Empty() {
-    return (top == 0);
+bool ArrayStack::Empty() {
+  return (top == 0);
 }
-
 
 // IMPLEMENTATION #2: AS A LIST
 
@@ -118,8 +108,7 @@ ArrayStack::Empty() {
 //----------------------------------------------------------------------
 
 ListStack::ListStack() : Stack() {
-
-    stack = new List;	 // allocate an empty list of integers.
+  stack = new List;  // allocate an empty list of integers.
 }
 
 //----------------------------------------------------------------------
@@ -129,8 +118,7 @@ ListStack::ListStack() : Stack() {
 //----------------------------------------------------------------------
 
 ListStack::~ListStack() {
-
-    delete stack;
+  delete stack;
 }
 
 //----------------------------------------------------------------------
@@ -140,9 +128,8 @@ ListStack::~ListStack() {
 //	"value" -- the value to put on the stack
 //----------------------------------------------------------------------
 
-void
-ListStack::Push(int value) {
-    stack->Prepend(value);
+void ListStack::Push(int value) {
+  stack->Prepend(value);
 }
 
 //----------------------------------------------------------------------
@@ -151,12 +138,10 @@ ListStack::Push(int value) {
 //	Error if the stack is empty.
 //----------------------------------------------------------------------
 
-int
-ListStack::Pop() {
+int ListStack::Pop() {
+  ASSERT(!Empty());
 
-    ASSERT(!Empty());
-    
-    return stack->Remove();
+  return stack->Remove();
 }
 
 //----------------------------------------------------------------------
@@ -164,9 +149,8 @@ ListStack::Pop() {
 // 	Return FALSE, because a liststack can never overflow
 //----------------------------------------------------------------------
 
-bool
-ListStack::Full() {
-    return FALSE;
+bool ListStack::Full() {
+  return FALSE;
 }
 
 //----------------------------------------------------------------------
@@ -174,38 +158,36 @@ ListStack::Full() {
 // 	Return TRUE if the stack has nothing on it.
 //----------------------------------------------------------------------
 
-bool
-ListStack::Empty() {
-    return stack->Empty();
+bool ListStack::Empty() {
+  return stack->Empty();
 }
 
 //----------------------------------------------------------------------
 // Stack::SelfTest
-// 	Test our stack implementation by pushing 10 numbers onto the 
+// 	Test our stack implementation by pushing 10 numbers onto the
 //	stack, and then print them as it pops them off.
 //
 //	Note this code is generic between the two versions --
 //	it doesn't matter whether this is an ArrayStack or a ListStack!
 //
-//	"numToPush" is the number of items to put on the stack in the 
+//	"numToPush" is the number of items to put on the stack in the
 //	selftest.
 //----------------------------------------------------------------------
 
-void
-Stack::SelfTest(int numToPush) {
-    int count = 17;
-    
-    // Put a bunch of stuff in the stack...
-    for (int i = 0; i < numToPush; i++) {
-	ASSERT(!Full());
-	cout << "pushing " << count << "\n";
-	Push(count++);
-    }
-    
-    // ... and take it out again.
-    while (!Empty()) {
-	cout << "popping " << Pop() << "\n";
-    }
+void Stack::SelfTest(int numToPush) {
+  int count = 17;
+
+  // Put a bunch of stuff in the stack...
+  for (int i = 0; i < numToPush; i++) {
+    ASSERT(!Full());
+    cout << "pushing " << count << "\n";
+    Push(count++);
+  }
+
+  // ... and take it out again.
+  while (!Empty()) {
+    cout << "popping " << Pop() << "\n";
+  }
 }
 
 //----------------------------------------------------------------------
@@ -213,18 +195,17 @@ Stack::SelfTest(int numToPush) {
 // 	Run the test code for the stack implementation.
 //----------------------------------------------------------------------
 
-int
-main() {
-    Stack *s1 = new ArrayStack(10);   // Constructor with an argument.
-    Stack *s2 = new ListStack(); 
+int main() {
+  Stack *s1 = new ArrayStack(10);  // Constructor with an argument.
+  Stack *s2 = new ListStack();
 
-    cout << "Testing ArrayStack\n";
-    s1->SelfTest(10);
+  cout << "Testing ArrayStack\n";
+  s1->SelfTest(10);
 
-    cout << "Testing ListStack\n";
-    s2->SelfTest(10);
+  cout << "Testing ListStack\n";
+  s2->SelfTest(10);
 
-    delete s1;		   // always delete what you allocate
-    delete s2;		   // always delete what you allocate
-    return 0;
+  delete s1;  // always delete what you allocate
+  delete s2;  // always delete what you allocate
+  return 0;
 }
