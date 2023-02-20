@@ -14,7 +14,7 @@
 #
 #
 # Copyright (c) 1992-1996 The Regents of the University of California.
-# All rights reserved.  See copyright.h for copyright notice and limitation 
+# All rights reserved.  See copyright.h for copyright notice and limitation
 # of liability and disclaimer of warranty provisions.
 #
 #  This file has been modified for use at Waterloo
@@ -27,9 +27,20 @@
 #############################################################################
 include Makefile.dep
 
+CFLAGS = $(HOSTCFLAGS) -DRDATA -m32
+LDFLAGS = -m32
+
+ifeq ($(shell uname -m), aarch64)
+$(info Building for aarch64)
+CC=i686-linux-gnu-gcc
+LD=i686-linux-gnu-gcc
+STRIP=i686-linux-gnu-strip
+else
+$(info Building for x86)
 CC=gcc
-CFLAGS= $(HOSTCFLAGS) -DRDATA -m32
-LD=gcc -m32
+LD=gcc
+STRIP=strip
+endif
 RM = /bin/rm
 MV = /bin/mv
 
@@ -43,8 +54,8 @@ all: $(buildtargets)
 
 # converts a COFF file to Nachos object format
 coff2noff.$(hosttype): coff2noff.o
-	$(LD) coff2noff.o -o coff2noff.$(hosttype)
-	strip coff2noff.$(hosttype)
+	$(LD) $(LDFLAGS) coff2noff.o -o coff2noff.$(hosttype)
+	$(STRIP) coff2noff.$(hosttype)
 
 clean:
 	$(RM) -f coff2noff.o
@@ -53,7 +64,6 @@ distclean: clean
 	$(MV) coff2noff.c temp.c
 	$(RM) -f coff2noff.*
 	$(MV) temp.c coff2noff.c
-
 
 unknownhost:
 	@echo Host type could not be determined.

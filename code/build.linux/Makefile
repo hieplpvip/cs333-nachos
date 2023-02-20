@@ -205,10 +205,18 @@ LDFLAGS = -m32
 CPP_AS_FLAGS= -m32
 
 #####################################################################
-CPP=/lib/cpp
+ifeq ($(shell uname -m), aarch64)
+$(info Building for aarch64)
+CC = i686-linux-gnu-g++
+LD = i686-linux-gnu-g++
+AS = i686-linux-gnu-as
+else
+$(info Building for x86)
 CC = g++
 LD = g++
 AS = as
+endif
+CPP=/lib/cpp
 RM = /bin/rm
 
 INCPATH = -I../network -I../filesys -I../userprog -I../threads -I../machine -I../lib -I-

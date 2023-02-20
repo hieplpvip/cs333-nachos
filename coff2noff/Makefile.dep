@@ -68,7 +68,7 @@ endif
 # At Waterloo: cantor.math,noether.math
 # Assume ULTRIX on a MIPS architecture
 ifeq ($(osname),ULTRIX)
-HOSTCFLAGS = 
+HOSTCFLAGS =
 hosttype = mipsUltrix
 endif
 
@@ -86,6 +86,3 @@ ifeq ($(osname),CYGWIN_NT-5.1)
 HOSTCFLAGS =
 hosttype = x86Linux
 endif
-
-
-
