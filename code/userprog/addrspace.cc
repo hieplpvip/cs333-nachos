@@ -178,7 +178,7 @@ void AddrSpace::Execute() {
   this->InitRegisters();  // set the initial register values
   this->RestoreState();   // load page table register
 
-  kernel->machine->Run();  // jump to the user progam
+  kernel->machine->Run();  // jump to the user program
 
   ASSERTNOTREACHED();  // machine->Run never returns;
                        // the address space exits
@@ -285,8 +285,8 @@ AddrSpace::Translate(unsigned int vaddr, unsigned int *paddr, int isReadWrite) {
 
   ASSERT((*paddr < MemorySize));
 
-  //cerr << " -- AddrSpace::Translate(): vaddr: " << vaddr <<
-  //  ", paddr: " << *paddr << "\n";
+  // cerr << " -- AddrSpace::Translate(): vaddr: " << vaddr <<
+  //   ", paddr: " << *paddr << "\n";
 
   return NoException;
 }

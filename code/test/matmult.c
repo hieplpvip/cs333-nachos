@@ -1,4 +1,4 @@
-/* matmult.c 
+/* matmult.c
  *    Test program to do matrix multiplication on large arrays.
  *
  *    Intended to stress virtual memory system.

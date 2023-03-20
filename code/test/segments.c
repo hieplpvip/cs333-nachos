@@ -30,8 +30,8 @@ main() {
   char *str = "Hello World .rdata segment\n";
 
   /* str is stored on the stack or in a register
-	 * but text that is initialized is stored in .rdata
-	 */
+   * but text that is initialized is stored in .rdata
+   */
 
   for (i = 0; i < N; i++) {
     uninitdata[i] = i;

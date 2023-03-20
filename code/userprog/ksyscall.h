@@ -2,7 +2,7 @@
  *
  * userprog/ksyscall.h
  *
- * Kernel interface for systemcalls 
+ * Kernel interface for systemcalls
  *
  * by Marcus Voelp  (c) Universitaet Karlsruhe
  *

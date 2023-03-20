@@ -179,4 +179,4 @@ int OpenFile::Length() {
   return hdr->FileLength();
 }
 
-#endif  //FILESYS_STUB
+#endif  // FILESYS_STUB

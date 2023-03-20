@@ -33,6 +33,8 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <cerrno>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 #ifdef SOLARIS
 // KMS
@@ -63,11 +65,11 @@ size_t getpagesize(void);
 int getpagesize(void);
 #endif
 unsigned sleep(unsigned);
-//#ifdef SOLARIS
-//int usleep(useconds_t);
-//#else
-//void usleep(unsigned int);  // rcgood - to avoid spinning processes.
-//#endif
+// #ifdef SOLARIS
+// int usleep(useconds_t);
+// #else
+// void usleep(unsigned int);  // rcgood - to avoid spinning processes.
+// #endif
 
 #ifndef NO_MPROT
 
@@ -86,8 +88,8 @@ int mprotect(char *, unsigned int, int);
 #endif
 
 #if defined(BSD) || defined(SOLARIS) || defined(LINUX)
-//KMS
-// added Solaris and LINUX
+// KMS
+//  added Solaris and LINUX
 int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
            struct timeval *timeout);
 #else
@@ -133,11 +135,11 @@ void Delay(int seconds) {
 //----------------------------------------------------------------------
 
 void UDelay(unsigned int useconds) {
-  //#ifdef SOLARIS
-  //   usleep(useconds_t useconds);
-  //#else
-  //   usleep(useconds);
-  //#endif /* SOLARIS */
+  // #ifdef SOLARIS
+  //    usleep(useconds_t useconds);
+  // #else
+  //    usleep(useconds);
+  // #endif /* SOLARIS */
 }
 
 //----------------------------------------------------------------------
@@ -274,6 +276,20 @@ bool PollFile(int fd) {
 }
 
 //----------------------------------------------------------------------
+// OpenForRead
+// 	Open a file for reading. Return the file descriptor.
+//
+//	"name" -- file name
+//----------------------------------------------------------------------
+
+int OpenForRead(char *name) {
+  int fd = open(name, O_RDONLY, 0666);
+
+  ASSERT(fd >= 0);
+  return fd;
+}
+
+//----------------------------------------------------------------------
 // OpenForWrite
 // 	Open a file for writing.  Create it if it doesn't exist; truncate it
 //	if it does already exist.  Return the file descriptor.
@@ -383,23 +399,48 @@ bool Unlink(char *name) {
 //	just open a datagram port where other Nachos (simulating
 //	workstations on a network) can send messages to this Nachos.
 //----------------------------------------------------------------------
-
 int OpenSocket() {
   int sockID;
-
   sockID = socket(AF_UNIX, SOCK_DGRAM, 0);
   ASSERT(sockID >= 0);
-
   return sockID;
+}
+
+int OpenSocketInternet() {
+  int sockID = socket(AF_INET, SOCK_STREAM, 0);
+  ASSERT(sockID >= 0);
+  return sockID;
+}
+
+//----------------------------------------------------------------------
+// Connect
+// 	Connect to IP Port
+//----------------------------------------------------------------------
+int Connect(int fd, char *ip, int port) {
+  sockaddr_in serv_addr;
+  serv_addr.sin_family = AF_INET;
+  serv_addr.sin_port = htons(port);
+  if (inet_pton(AF_INET, ip, &serv_addr.sin_addr) <= 0) {
+    return -1;
+  }
+
+  return connect(fd, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
 }
 
 //----------------------------------------------------------------------
 // CloseSocket
 // 	Close the IPC connection.
 //----------------------------------------------------------------------
-
 void CloseSocket(int sockID) {
-  (void)close(sockID);
+  close(sockID);
+}
+
+int Send(int fd, char *buffer, int len) {
+  return send(fd, buffer, len, 0);
+}
+
+int Receive(int fd, char *buffer, int len) {
+  return recv(fd, buffer, len, 0);
 }
 
 //----------------------------------------------------------------------

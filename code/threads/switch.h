@@ -11,7 +11,7 @@
 
 /*
  Copyright (c) 1992-1996 The Regents of the University of California.
- All rights reserved.  See copyright.h for copyright notice and limitation 
+ All rights reserved.  See copyright.h for copyright notice and limitation
  of liability and disclaimer of warranty provisions.
  */
 
@@ -22,8 +22,8 @@
 
 #ifdef DECMIPS
 
-/* Registers that must be saved during a context switch. 
- * These are the offsets from the beginning of the Thread object, 
+/* Registers that must be saved during a context switch.
+ * These are the offsets from the beginning of the Thread object,
  * in bytes, used in switch.s
  */
 #define SP 0
@@ -223,11 +223,11 @@
 
 #ifdef ALPHA
 
-/* 
+/*
  * Porting to Alpha was done by Shuichi Oikawa (shui@sfc.keio.ac.jp).
  */
-/* Registers that must be saved during a context switch. 
- * These are the offsets from the beginning of the Thread object, 
+/* Registers that must be saved during a context switch.
+ * These are the offsets from the beginning of the Thread object,
  * in bytes, used in switch.s
  */
 #define SP (0 * 8)

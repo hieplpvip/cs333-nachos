@@ -44,6 +44,7 @@ extern bool PollFile(int fd);
 // File operations: open/read/write/lseek/close, and check for error
 // For simulating the disk and the console devices.
 extern int OpenForWrite(char *name);
+extern int OpenForRead(char *name);
 extern int OpenForReadWrite(char *name, bool crashOnError);
 extern void Read(int fd, char *buffer, int nBytes);
 extern int ReadPartial(int fd, char *buffer, int nBytes);
@@ -65,6 +66,10 @@ void bzero(void *s, size_t n);
 
 // Interprocess communication operations, for simulating the network
 extern int OpenSocket();
+extern int OpenSocketInternet();
+extern int Connect(int fd, char *ip, int port);
+extern int Send(int fd, char *buffer, int len);
+extern int Receive(int fd, char *buffer, int len);
 extern void CloseSocket(int sockID);
 extern void AssignNameToSocket(char *socketName, int sockID);
 extern void DeAssignNameToSocket(char *socketName);

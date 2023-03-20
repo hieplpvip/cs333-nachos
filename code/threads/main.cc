@@ -169,7 +169,7 @@ int main(int argc, char **argv) {
   char *removeFileName = NULL;
   bool dirListFlag = false;
   bool dumpFlag = false;
-#endif  //FILESYS_STUB
+#endif  // FILESYS_STUB
 
   // some command line arguments are handled here.
   // those that set kernel parameters are handled in
@@ -211,7 +211,7 @@ int main(int argc, char **argv) {
     } else if (strcmp(argv[i], "-D") == 0) {
       dumpFlag = true;
     }
-#endif  //FILESYS_STUB
+#endif  // FILESYS_STUB
     else if (strcmp(argv[i], "-u") == 0) {
       cout << "Partial usage: nachos [-z -d debugFlags]\n";
       cout << "Partial usage: nachos [-x programName]\n";
@@ -220,7 +220,7 @@ int main(int argc, char **argv) {
       cout << "Partial usage: nachos [-cp UnixFile NachosFile]\n";
       cout << "Partial usage: nachos [-p fileName] [-r fileName]\n";
       cout << "Partial usage: nachos [-l] [-D]\n";
-#endif  //FILESYS_STUB
+#endif  // FILESYS_STUB
     }
   }
   debug = new Debug(debugArg);

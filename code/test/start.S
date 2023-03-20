@@ -90,6 +90,14 @@ Join:
 	j	$31
 	.end Join
 
+	.globl PrintString
+	.ent	PrintString
+PrintString:
+	addiu $2,$0,SC_PrintString
+	syscall
+	j	$31
+	.end PrintString
+
 	.globl Create
 	.ent	Create
 Create:
@@ -177,7 +185,46 @@ ThreadJoin:
 	syscall
 	j 	$31
 	.end ThreadJoin
-	
+
+	.globl SocketTCP
+	.ent	SocketTCP
+SocketTCP:
+	addiu $2, $0, SC_OpenSocket
+	syscall
+	j 	$31
+	.end SocketTCP
+
+	.globl Connect
+	.ent	Connect
+Connect:
+	addiu $2, $0, SC_Connect
+	syscall
+	j 	$31
+	.end Connect
+
+	.globl Send
+	.ent	Send
+Send:
+	addiu $2, $0, SC_Send
+	syscall
+	j 	$31
+	.end Send
+
+	.globl Receive
+	.ent	Receive
+Receive:
+	addiu $2, $0, SC_Receive
+	syscall
+	j 	$31
+	.end Receive
+
+	.globl CloseTCP
+	.ent	CloseTCP
+CloseTCP:
+	addiu $2, $0, SC_CloseSocket
+	syscall
+	j 	$31
+	.end CloseTCP
 /* dummy function to keep gcc happy */
         .globl  __main
         .ent    __main

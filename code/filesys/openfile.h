@@ -24,6 +24,7 @@
 #include "utility.h"
 #include "sysdep.h"
 
+#define FILESYS_STUB
 #ifdef FILESYS_STUB  // Temporarily implement calls to       \
                      // Nachos file system as calls to UNIX! \
                      // See definitions listed under #else
@@ -32,27 +33,48 @@ public:
   OpenFile(int f) {
     file = f;
     currentOffset = 0;
-  }                             // open the file
-  ~OpenFile() { Close(file); }  // close the file
+  }  // open the file
+
+  ~OpenFile() {
+    Close(file);
+  }  // close the file
 
   int ReadAt(char *into, int numBytes, int position) {
     Lseek(file, position, 0);
     return ReadPartial(file, into, numBytes);
   }
+
   int WriteAt(char *from, int numBytes, int position) {
     Lseek(file, position, 0);
     WriteFile(file, from, numBytes);
     return numBytes;
   }
+
   int Read(char *into, int numBytes) {
     int numRead = ReadAt(into, numBytes, currentOffset);
     currentOffset += numRead;
     return numRead;
   }
+
   int Write(char *from, int numBytes) {
     int numWritten = WriteAt(from, numBytes, currentOffset);
     currentOffset += numWritten;
     return numWritten;
+  }
+
+  int Seek(int position) {
+    int len = Length();
+    // printf("length of file %d", len);
+    if (position == -1) {
+      currentOffset = Length();
+    } else {
+      if (position < -1 || position > len) {
+        return -1;
+      }
+      currentOffset = position;
+    }
+
+    return currentOffset;
   }
 
   int Length() {
