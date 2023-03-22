@@ -54,7 +54,7 @@
 #define VALID_SLOT(slot) (slot >= RESERVED_FD && slot < FDT_SIZE && fileTable[slot] != NULL)
 
 int FileSystem::findFreeSlot() {
-  for (int i = RESERVED_FD; i < FDT_SIZE; ++i) {
+  for (int i = RESERVED_FD; i < FDT_SIZE; i++) {
     if (fileTable[i] == NULL) {
       return i;
     }
@@ -68,7 +68,7 @@ FileSystem::FileSystem() {
 }
 
 FileSystem::~FileSystem() {
-  for (int i = 0; i < FDT_SIZE; ++i) {
+  for (int i = 0; i < FDT_SIZE; i++) {
     if (fileTable[i] != NULL) {
       delete fileTable[i];
     }
@@ -120,7 +120,7 @@ bool FileSystem::Close(int slot) {
 
 bool FileSystem::Remove(char *name) {
   // Check if file is opened
-  for (int i = 2; i < FDT_SIZE; ++i) {
+  for (int i = 2; i < FDT_SIZE; i++) {
     if (fileTable[i] == NULL) {
       continue;
     }
@@ -135,7 +135,7 @@ int FileSystem::Read(int slot, char *buffer, int count) {
   if (slot == 0) {
     // Console Input
     int numRead = 0;
-    for (int i = 0; i < count; ++i) {
+    for (int i = 0; i < count; i++) {
       buffer[i] = kernel->synchConsoleIn->GetChar();
       if (buffer[i] == EOF) {
         break;
@@ -155,7 +155,7 @@ int FileSystem::Read(int slot, char *buffer, int count) {
 int FileSystem::Write(int slot, char *buffer, int count) {
   if (slot == 1) {
     // Console Output
-    for (int i = 0; i < count; ++i) {
+    for (int i = 0; i < count; i++) {
       kernel->synchConsoleOut->PutChar(buffer[i]);
     }
     return count;

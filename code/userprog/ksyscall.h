@@ -18,6 +18,10 @@ void SysHalt() {
   kernel->interrupt->Halt();
 }
 
+void SysExit() {
+  kernel->interrupt->Halt();
+}
+
 int SysAdd(int op1, int op2) {
   DEBUG(dbgSys, "Add " << op1 << " + " << op2 << "\n");
 

@@ -95,7 +95,7 @@ AddrSpace::~AddrSpace() {
 //	"fileName" is the file containing the object code to load into memory
 //----------------------------------------------------------------------
 
-bool AddrSpace::Load(char *fileName) {
+bool AddrSpace::Load(char *fileName, int argc, char **argv) {
   OpenFile *executable = kernel->fileSystem->Open(fileName);
   NoffHeader noffH;
   unsigned int size;
@@ -111,16 +111,27 @@ bool AddrSpace::Load(char *fileName) {
     SwapHeader(&noffH);
   ASSERT(noffH.noffMagic == NOFFMAGIC);
 
+  argCount = argc;
+  argSize = 0;
+  if (argc > 0) {
+    argSize += 4 * (argc + 1);
+    for (int i = 0; i < argc; i++) {
+      argSize += strlen(argv[i]) + 1;
+    }
+  }
+  argSize = divRoundUp(argSize, 4) * 4;
+
 #ifdef RDATA
   // how big is address space?
   size = noffH.code.size + noffH.readonlyData.size + noffH.initData.size +
-         noffH.uninitData.size + UserStackSize;
+         noffH.uninitData.size + UserStackSize + argSize;
   // we need to increase the size
   // to leave room for the stack
 #else
   // how big is address space?
-  size = noffH.code.size + noffH.initData.size + noffH.uninitData.size + UserStackSize;  // we need to increase the size
-                                                                                         // to leave room for the stack
+  size = noffH.code.size + noffH.initData.size + noffH.uninitData.size + UserStackSize + argSize;
+  // we need to increase the size
+  // to leave room for the stack
 #endif
   numPages = divRoundUp(size, PageSize);
   size = numPages * PageSize;
@@ -158,6 +169,27 @@ bool AddrSpace::Load(char *fileName) {
         noffH.readonlyData.size, noffH.readonlyData.inFileAddr);
   }
 #endif
+
+  if (argc > 0) {
+    DEBUG(dbgAddr, "Copying " << argc << " arguments to memory.");
+    int argAddr = size - argSize;
+    int strAddr = argAddr + 4 * (argc + 1);
+    for (int i = 0; i < argc; i++) {
+      int strLen = strlen(argv[i]) + 1;
+
+      // write argument address
+      kernel->machine->mainMemory[argAddr] = strAddr;
+
+      // write argument string
+      memcpy(kernel->machine->mainMemory + strAddr, argv[i], strLen);
+
+      argAddr += 4;
+      strAddr += strLen;
+    }
+
+    // zero terminate argument list
+    kernel->machine->mainMemory[argAddr] = 0;
+  }
 
   delete executable;  // close file
   return TRUE;        // success
@@ -215,8 +247,15 @@ void AddrSpace::InitRegisters() {
   // Set the stack register to the end of the address space, where we
   // allocated the stack; but subtract off a bit, to make sure we don't
   // accidentally reference off the end!
-  machine->WriteRegister(StackReg, numPages * PageSize - 16);
-  DEBUG(dbgAddr, "Initializing stack pointer: " << numPages * PageSize - 16);
+  int stackReg = numPages * PageSize - argSize - 16;
+  machine->WriteRegister(StackReg, stackReg);
+  DEBUG(dbgAddr, "Initializing stack pointer: " << stackReg);
+
+  // Pass argc and argv to the program
+  if (argCount > 0) {
+    kernel->machine->WriteRegister(4, argCount);
+    kernel->machine->WriteRegister(5, numPages * PageSize - argSize);
+  }
 }
 
 //----------------------------------------------------------------------

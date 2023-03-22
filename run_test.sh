@@ -9,4 +9,4 @@ cd code/test
 make
 
 echo "Running $1"
-../build.linux/nachos -x $1
+../build.linux/nachos -x "$@"

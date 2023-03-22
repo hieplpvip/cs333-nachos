@@ -23,9 +23,9 @@ public:
   AddrSpace();   // Create an address space.
   ~AddrSpace();  // De-allocate an address space
 
-  bool Load(char *fileName);  // Load a program into addr space from
-                              // a file
-                              // return false if not found
+  bool Load(char *fileName, int argc, char **argv);  // Load a program with command-line arguments
+                                                     // into addr space from a file
+                                                     // return false if not found
 
   void Execute();  // Run a program
                    // assumes the program has already
@@ -44,6 +44,8 @@ private:
                                 // for now!
   unsigned int numPages;        // Number of pages in the virtual
                                 // address space
+  unsigned int argCount;        // Number of command-line arguments
+  unsigned int argSize;         // Size of memory for command-line arguments
 
   void InitRegisters();  // Initialize user-level CPU registers,
                          // before jumping to user code

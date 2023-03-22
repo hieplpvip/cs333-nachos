@@ -4,7 +4,7 @@
 
 void RawUser2System(int virtAddr, int size, char* buffer) {
   int tmp;
-  for (int i = 0; i < size; ++i) {
+  for (int i = 0; i < size; i++) {
     kernel->machine->ReadMem(virtAddr + i, 1, &tmp);
     buffer[i] = (char)tmp;
   }
@@ -14,7 +14,7 @@ int StringUser2System(int virtAddr, int limit, char* buffer) {
   memset(buffer, 0, limit + 1);
 
   int tmp;
-  for (int i = 0; i < limit; ++i) {
+  for (int i = 0; i < limit; i++) {
     kernel->machine->ReadMem(virtAddr + i, 1, &tmp);
     buffer[i] = (char)tmp;
     if (tmp == 0) {
@@ -39,7 +39,7 @@ char* StringUser2System(int virtAddr) {
     return NULL;
   }
 
-  for (int i = 0; i < len; ++i) {
+  for (int i = 0; i < len; i++) {
     kernel->machine->ReadMem(virtAddr + i, 1, &tmp);
     buffer[i] = (char)tmp;
   }
@@ -47,7 +47,7 @@ char* StringUser2System(int virtAddr) {
 }
 
 void RawSystem2User(int virtAddr, int size, char* buffer) {
-  for (int i = 0; i < size; ++i) {
+  for (int i = 0; i < size; i++) {
     kernel->machine->WriteMem(virtAddr + i, 1, (int)buffer[i]);
   }
 }

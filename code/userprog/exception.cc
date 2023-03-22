@@ -59,6 +59,12 @@ void handle_SC_Halt() {
   ASSERTNOTREACHED();
 }
 
+void handle_SC_Exit() {
+  DEBUG(dbgSys, "Handle SC_Exit");
+  SysExit();
+  ASSERTNOTREACHED();
+}
+
 void handle_SC_Add() {
   DEBUG(dbgSys, "Handle SC_Add");
 
@@ -292,6 +298,8 @@ void ExceptionHandler(ExceptionType which) {
       switch (type) {
         case SC_Halt:
           return handle_SC_Halt();
+        case SC_Exit:
+          return handle_SC_Exit();
         case SC_Add:
           return handle_SC_Add();
         case SC_PrintString:

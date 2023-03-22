@@ -162,6 +162,8 @@ int main(int argc, char **argv) {
   bool threadTestFlag = false;
   bool consoleTestFlag = false;
   bool networkTestFlag = false;
+  int userProgArgc = 0;
+  char **userProgArgv = NULL;
 #ifndef FILESYS_STUB
   char *copyUnixFileName = NULL;    // UNIX file to be copied into Nachos
   char *copyNachosFileName = NULL;  // name of copied file in Nachos
@@ -184,7 +186,9 @@ int main(int argc, char **argv) {
     } else if (strcmp(argv[i], "-x") == 0) {
       ASSERT(i + 1 < argc);
       userProgName = argv[i + 1];
-      i++;
+      userProgArgc = argc - i - 1;
+      userProgArgv = &argv[i + 1];
+      break;
     } else if (strcmp(argv[i], "-K") == 0) {
       threadTestFlag = TRUE;
     } else if (strcmp(argv[i], "-C") == 0) {
@@ -267,9 +271,9 @@ int main(int argc, char **argv) {
   if (userProgName != NULL) {
     AddrSpace *space = new AddrSpace;
     ASSERT(space != (AddrSpace *)NULL);
-    if (space->Load(userProgName)) {  // load the program into the space
-      space->Execute();               // run the program
-      ASSERTNOTREACHED();             // Execute never returns
+    if (space->Load(userProgName, userProgArgc, userProgArgv)) {  // load the program into the space
+      space->Execute();                                           // run the program
+      ASSERTNOTREACHED();                                         // Execute never returns
     }
   }
 
