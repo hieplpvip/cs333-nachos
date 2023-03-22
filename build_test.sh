@@ -10,6 +10,12 @@ make
 
 ../build.linux/nachos -x halt
 ../build.linux/nachos -x add
-../build.linux/nachos -x openfile
-../build.linux/nachos -x createfile
+../build.linux/nachos -x createfile hello.txt
+../build.linux/nachos -x delete hello.txt
+
+../build.linux/nachos -x copy copy.c hello.c
+../build.linux/nachos -x cat hello.c
+../build.linux/nachos -x concatenate cat.c hello.c
+../build.linux/nachos -x delete hello.c
+
 #../build.linux/nachos -x echoclient

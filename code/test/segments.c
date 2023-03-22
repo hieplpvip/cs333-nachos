@@ -21,7 +21,7 @@ int initdata2 = 0xbb;                /* same as above                         */
 const int blah = 0xff;               /* into .rdata segment                   */
 int uninitdata[N];                   /* allocate space in .bss segment        */
 
-main() {
+int main() {
   /* automatic variable stored on stack or in register */
   int i;
   int stack1 = 0xaa;
@@ -36,5 +36,6 @@ main() {
   for (i = 0; i < N; i++) {
     uninitdata[i] = i;
   }
-  Halt();
+
+  return 0;
 }

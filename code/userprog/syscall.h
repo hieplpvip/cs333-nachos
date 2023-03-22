@@ -112,12 +112,12 @@ typedef int OpenFileId;
  * the console device.
  */
 
-#define ConsoleInputID 0
-#define ConsoleOutputID 1
+#define ConsoleInputId 0
+#define ConsoleOutputId 1
 
-/* print string syscall (FOR TESTING)
+/* Print null-terminated string to the console.
  */
-int PrintString(char *s, int len);
+int PrintString(char *s);
 
 /* Create a Nachos file, with name "name" */
 /* Note: Create does not open the file.   */

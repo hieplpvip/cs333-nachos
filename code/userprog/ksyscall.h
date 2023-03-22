@@ -13,19 +13,33 @@
 
 #include "kernel.h"
 #include "main.h"
+#include "synchconsole.h"
 
 void SysHalt() {
   kernel->interrupt->Halt();
 }
 
-void SysExit() {
+void SysExit(int code) {
+  DEBUG(dbgSys, "Exit with code " << code);
+
+  ASSERT(code == 0);
   kernel->interrupt->Halt();
 }
 
 int SysAdd(int op1, int op2) {
-  DEBUG(dbgSys, "Add " << op1 << " + " << op2 << "\n");
+  DEBUG(dbgSys, "Add " << op1 << " + " << op2);
 
   return op1 + op2;
+}
+
+int SysPrintString(char* s) {
+  DEBUG(dbgSys, "Print string");
+
+  while (*s != '\0') {
+    kernel->synchConsoleOut->PutChar(*s);
+    s++;
+  }
+  return 0;
 }
 
 int SysCreate(char* filename) {

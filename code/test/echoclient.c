@@ -18,5 +18,6 @@ int main() {
     Receive(fd[i], retbuffer[i], 1024);
   for (i = 0; i < 4; i++)
     CloseTCP(fd[i]);
-  Halt();
+
+  return 0;
 }

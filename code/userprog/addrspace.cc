@@ -178,7 +178,7 @@ bool AddrSpace::Load(char *fileName, int argc, char **argv) {
       int strLen = strlen(argv[i]) + 1;
 
       // write argument address
-      kernel->machine->mainMemory[argAddr] = strAddr;
+      *(unsigned int *)&kernel->machine->mainMemory[argAddr] = WordToMachine((unsigned int)strAddr);
 
       // write argument string
       memcpy(kernel->machine->mainMemory + strAddr, argv[i], strLen);

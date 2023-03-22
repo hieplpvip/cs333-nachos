@@ -61,7 +61,9 @@ void handle_SC_Halt() {
 
 void handle_SC_Exit() {
   DEBUG(dbgSys, "Handle SC_Exit");
-  SysExit();
+
+  int code = kernel->machine->ReadRegister(4);
+  SysExit(code);
   ASSERTNOTREACHED();
 }
 
@@ -78,11 +80,13 @@ void handle_SC_PrintString() {
   DEBUG(dbgSys, "Handle SC_PrintString");
 
   int virtAddr = kernel->machine->ReadRegister(4);
-  int len = kernel->machine->ReadRegister(5);
-  char* s = new char[len + 1];
-  StringUser2System(virtAddr, len, s);
-  printf("%s\n", s);
-  return setReturnCodeAndIncrementPC(0);
+  int result;
+
+  char* s = StringUser2System(virtAddr);
+  result = SysPrintString(s);
+  delete s;
+
+  return setReturnCodeAndIncrementPC(result);
 }
 
 void handle_SC_Create() {
