@@ -44,205 +44,29 @@
                      // calls to UNIX, until the real file system  \
                      // implementation is available
 class FileSystem {
-  struct OpenFileEntry {
-    OpenFile *file;
-    char *fileName;
-    bool type;  // 0: read write, 1: read-only
+private:
+  OpenFile *fileTable[FDT_SIZE];
 
-    OpenFileEntry(OpenFile *_file, bool _type, char *_fileName) {
-      file = _file;
-      type = _type;
-      fileName = _fileName;
-    }
-
-    ~OpenFileEntry() {
-      if (file) {
-        delete file;
-      }
-    }
-  };
-
-  struct OpenSocketEntry {
-    int fd;
-
-    OpenSocketEntry(int _fd) {
-      fd = _fd;
-    }
-
-    ~OpenSocketEntry() {
-      CloseSocket(fd);
-    }
-  };
-
-  OpenFileEntry *FileTable[20];
-  OpenSocketEntry *SocketTable[20];
+  int findFreeSlot();
 
 public:
-  FileSystem() {
-    memset(FileTable, 0, sizeof(FileTable));
-    memset(SocketTable, 0, sizeof(SocketTable));
-  }
+  FileSystem();
+  ~FileSystem();
 
-  // Ignore
-  OpenFile *Open(char *name) {
-    int fileDescriptor = OpenForReadWrite(name, FALSE);
+  OpenFile *Open(char *name);
+  bool Create(char *name);
+  int Open(char *name, int mode);
+  bool Close(int slot);
+  bool Remove(char *name);
+  int Read(int slot, char *buffer, int count);
+  int Write(int slot, char *buffer, int count);
+  int Seek(int slot, int pos);
 
-    if (fileDescriptor == -1) {
-      return NULL;
-    }
-
-    return new OpenFile(fileDescriptor);
-  }
-
-  // File
-  bool Create(char *name) {
-    int fileDescriptor = OpenForWrite(name);
-
-    if (fileDescriptor == -1) {
-      return FALSE;
-    }
-
-    Close(fileDescriptor);
-    return TRUE;
-  }
-
-  int FindFreeSlot() {
-    for (int i = RESERVED_FD; i < FDT_SIZE; ++i) {
-      if (FileTable[i] == NULL) {
-        return i;
-      }
-    }
-
-    return -1;
-  }
-
-  int OpenRead(char *name) {
-    int slot = FindFreeSlot();
-    if (slot == -1) {
-      return -1;
-    }
-    int fileDescriptor = OpenForRead(name);
-    FileTable[slot] = new OpenFileEntry(new OpenFile(fileDescriptor), 1, name);
-    return slot;
-  }
-
-  int OpenReadWrite(char *name) {
-    int slot = FindFreeSlot();
-    if (slot == -1) {
-      return -1;
-    }
-    int fileDescriptor = OpenForReadWrite(name, FALSE);
-    FileTable[slot] = new OpenFileEntry(new OpenFile(fileDescriptor), 0, name);
-    return slot;
-  }
-
-  int CloseFile(int slot) {
-    if (slot < RESERVED_FD || slot >= FDT_SIZE) return -1;
-    if (!FileTable[slot]) {
-      return -1;
-    }
-    delete FileTable[slot];
-    FileTable[slot] = NULL;
-    return 0;
-  }
-
-  bool Remove(char *name) {
-    // check if a file is opened
-    for (int i = 2; i < 20; ++i) {
-      if (FileTable[i] == NULL) {
-        continue;
-      }
-      if (strcmp(FileTable[i]->fileName, name) == 0) {
-        return false;
-      }
-    }
-    return Unlink(name) == 0;
-  }
-
-  int Read(char *buffer, int size, int slot) {
-    if (slot < RESERVED_FD || slot >= FDT_SIZE || !FileTable[slot]) {
-      return -1;
-    }
-    int numRead = FileTable[slot]->file->Read(buffer, size);
-    return numRead;
-  }
-
-  int Write(char *buffer, int size, int slot) {
-    if (slot <= 1 || slot >= 20 || !FileTable[slot]) {
-      return -1;
-    }
-    if (FileTable[slot]->type) {
-      printf("File ID %d cannot write", slot);
-      return -1;
-    }
-    int numWritten = FileTable[slot]->file->Write(buffer, size);
-    return numWritten;
-  }
-
-  int Seek(int position, int slot) {
-    if (slot <= 1 || slot >= 20 || !FileTable[slot]) {
-      return -1;
-    }
-
-    int actual_pos = FileTable[slot]->file->Seek(position);
-    return actual_pos;
-  }
-
-  int FindFile(char *filename) {
-  }
-
-  // Socket
-  int findFreeSlotSocket() {
-    for (int i = RESERVED_FD; i < FDT_SIZE; ++i) {
-      if (SocketTable[i] == NULL) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  int CreateTCPSocket() {
-    int slot = findFreeSlotSocket();
-    if (slot == -1) {
-      return -1;
-    }
-    int fd = OpenSocketInternet();
-    if (fd < -1) {
-      return -1;
-    }
-    SocketTable[slot] = new OpenSocketEntry(fd);
-    return slot;
-  }
-
-  int ConnectTCPSocket(int slot, char *ip, int port) {
-    if (slot < RESERVED_FD || slot >= FDT_SIZE || !SocketTable[slot]) {
-      return -1;
-    }
-    return Connect(SocketTable[slot]->fd, ip, port);
-  };
-
-  int SendData(int slot, char *buffer, int len) {
-    if (slot < RESERVED_FD || slot >= FDT_SIZE || !SocketTable[slot]) {
-      return -1;
-    }
-    return Send(SocketTable[slot]->fd, buffer, len);
-  }
-
-  int ReceiveData(int slot, char *buffer, int len) {
-    if (slot < RESERVED_FD || slot >= FDT_SIZE || !SocketTable[slot]) {
-      return -1;
-    }
-    return Receive(SocketTable[slot]->fd, buffer, len);
-  }
-
-  int CloseTCPSocket(int slot) {
-    if (slot < RESERVED_FD || slot >= FDT_SIZE || !SocketTable[slot]) {
-      return -1;
-    }
-    delete SocketTable[slot];
-    SocketTable[slot] = NULL;
-    return 0;
-  }
+  int CreateTCPSocket();
+  int ConnectTCPSocket(int slot, char *ip, int port);
+  int SendData(int slot, char *buffer, int count);
+  int ReceiveData(int slot, char *buffer, int count);
+  bool CloseTCPSocket(int slot);
 };
 
 #else  // FILESYS

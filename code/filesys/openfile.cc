@@ -10,12 +10,116 @@
 // Copyright (c) 1992-1993 The Regents of the University of California.
 // All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
-#ifndef FILESYS_STUB
 
 #include "copyright.h"
 #include "main.h"
-#include "filehdr.h"
 #include "openfile.h"
+
+#ifdef FILESYS_STUB
+
+OpenFile::OpenFile(int __fd, int __mode, char *__fileName, bool __isSocket) {
+  _fd = __fd;
+  _mode = __mode;
+  _currentOffset = 0;
+  _isSocket = __isSocket;
+
+  if (__fileName) {
+    int len = strlen(__fileName);
+    _fileName = new char[len + 1];
+    strcpy(_fileName, __fileName);
+  } else {
+    _fileName = NULL;
+  }
+}
+
+OpenFile::~OpenFile() {
+  Close(_fd);
+  delete[] _fileName;
+}
+
+int OpenFile::fd() const {
+  return _fd;
+}
+
+int OpenFile::mode() const {
+  return _mode;
+}
+
+char *OpenFile::fileName() const {
+  return _fileName;
+}
+
+bool OpenFile::isSocket() const {
+  return _isSocket;
+}
+
+int OpenFile::ReadAt(char *into, int numBytes, int position) {
+  if (_isSocket) {
+    return -1;
+  }
+
+  Lseek(_fd, position, 0);
+  return ReadPartial(_fd, into, numBytes);
+}
+
+int OpenFile::WriteAt(char *from, int numBytes, int position) {
+  if (_isSocket) {
+    return -1;
+  }
+
+  Lseek(_fd, position, 0);
+  WriteFile(_fd, from, numBytes);
+  return numBytes;
+}
+
+int OpenFile::Read(char *into, int numBytes) {
+  if (_isSocket) {
+    return Receive(_fd, into, numBytes);
+  }
+
+  int numRead = ReadAt(into, numBytes, _currentOffset);
+  _currentOffset += numRead;
+  return numRead;
+}
+
+int OpenFile::Write(char *from, int numBytes) {
+  if (_isSocket) {
+    return Send(_fd, from, numBytes);
+  }
+
+  int numWritten = WriteAt(from, numBytes, _currentOffset);
+  _currentOffset += numWritten;
+  return numWritten;
+}
+
+int OpenFile::Seek(int position) {
+  if (_isSocket) {
+    return -1;
+  }
+
+  int len = Length();
+  if (position == -1) {
+    return _currentOffset = len;
+  } else {
+    if (position < 0 || position > len) {
+      return -1;
+    }
+    return _currentOffset = position;
+  }
+}
+
+int OpenFile::Length() {
+  if (_isSocket) {
+    return -1;
+  }
+
+  Lseek(_fd, 0, 2);
+  return Tell(_fd);
+}
+
+#else
+
+#include "filehdr.h"
 #include "synchdisk.h"
 
 //----------------------------------------------------------------------

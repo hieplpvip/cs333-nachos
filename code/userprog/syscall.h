@@ -43,6 +43,9 @@
 
 #define SC_Add 42
 
+#define MODE_READWRITE 0
+#define MODE_READ 1
+
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos

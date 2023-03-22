@@ -9,7 +9,7 @@ cd code/test
 make
 
 ../build.linux/nachos -x halt
-#../build.linux/nachos -x add
+../build.linux/nachos -x add
 ../build.linux/nachos -x openfile
 ../build.linux/nachos -x createfile
 #../build.linux/nachos -x echoclient

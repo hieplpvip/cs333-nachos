@@ -2,55 +2,70 @@
 #include "kernel.h"
 #include "machine.h"
 
-char* User2System(int virtAddr, int limit) {
-  int i;  // index
-  int oneChar;
-  char* kernelBuf = NULL;
-
-  kernelBuf = new char[limit + 1];  // need for terminal string
-  if (kernelBuf == NULL)
-    return kernelBuf;
-  memset(kernelBuf, 0, limit + 1);
-
-  // printf("\n Filename u2s:");
-  for (i = 0; i < limit; i++) {
-    kernel->machine->ReadMem(virtAddr + i, 1, &oneChar);
-    kernelBuf[i] = (char)oneChar;
-    // printf("%c",kernelBuf[i]);
-    if (oneChar == 0)
-      break;
+void RawUser2System(int virtAddr, int size, char* buffer) {
+  int tmp;
+  for (int i = 0; i < size; ++i) {
+    kernel->machine->ReadMem(virtAddr + i, 1, &tmp);
+    buffer[i] = (char)tmp;
   }
-  return kernelBuf;
 }
-/*
-Input: - User space address (int)
-- Limit of buffer (int)
-- Buffer (char[])
-Output:- Number of bytes copied (int)
-Purpose: Copy buffer from System memory space to User memory space
-*/
 
-int System2User(int virtAddr, int len, char* buffer) {
-  if (len < 0) return -1;
-  if (len == 0) return len;
-  int i = 0;
-  int oneChar = 0;
+int StringUser2System(int virtAddr, int limit, char* buffer) {
+  memset(buffer, 0, limit + 1);
+
+  int tmp;
+  for (int i = 0; i < limit; ++i) {
+    kernel->machine->ReadMem(virtAddr + i, 1, &tmp);
+    buffer[i] = (char)tmp;
+    if (tmp == 0) {
+      return i;
+    }
+  }
+
+  return limit;
+}
+
+char* StringUser2System(int virtAddr) {
+  int tmp;
+  int len = 0;
+
   do {
-    oneChar = (int)buffer[i];
-    kernel->machine->WriteMem(virtAddr + i, 1, oneChar);
-    i++;
-  } while (i < len && oneChar != 0);
-  return i;
+    kernel->machine->ReadMem(virtAddr + len, 1, &tmp);
+    ++len;
+  } while (tmp != 0);
+
+  char* buffer = new char[len];
+  if (buffer == NULL) {
+    return NULL;
+  }
+
+  for (int i = 0; i < len; ++i) {
+    kernel->machine->ReadMem(virtAddr + i, 1, &tmp);
+    buffer[i] = (char)tmp;
+  }
+  return buffer;
+}
+
+void RawSystem2User(int virtAddr, int size, char* buffer) {
+  for (int i = 0; i < size; ++i) {
+    kernel->machine->WriteMem(virtAddr + i, 1, (int)buffer[i]);
+  }
 }
 
 void incrementPC() {
-  printf("\n");
-  /* set previous programm counter (debugging only)*/
+  // Adapted from `machine/mipssim.cc`, line 667
+
+  // Set previous program counter (debugging only)
   kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
 
-  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+  // Set program counter to next instruction (all Instructions are 4 byte wide)
   kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
 
-  /* set next programm counter for brach execution */
+  // Set next program counter for branch execution
   kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+}
+
+void setReturnCodeAndIncrementPC(int returnCode) {
+  kernel->machine->WriteRegister(2, returnCode);
+  incrementPC();
 }

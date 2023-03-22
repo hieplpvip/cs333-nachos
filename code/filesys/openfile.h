@@ -28,63 +28,33 @@
 #ifdef FILESYS_STUB  // Temporarily implement calls to       \
                      // Nachos file system as calls to UNIX! \
                      // See definitions listed under #else
+
+#define MODE_READWRITE 0
+#define MODE_READ 1
+
 class OpenFile {
 public:
-  OpenFile(int f) {
-    file = f;
-    currentOffset = 0;
-  }  // open the file
+  OpenFile(int fd, int mode, char *filename, bool isSocket);
+  ~OpenFile();
 
-  ~OpenFile() {
-    Close(file);
-  }  // close the file
+  int fd() const;
+  int mode() const;
+  char *fileName() const;
+  bool isSocket() const;
 
-  int ReadAt(char *into, int numBytes, int position) {
-    Lseek(file, position, 0);
-    return ReadPartial(file, into, numBytes);
-  }
-
-  int WriteAt(char *from, int numBytes, int position) {
-    Lseek(file, position, 0);
-    WriteFile(file, from, numBytes);
-    return numBytes;
-  }
-
-  int Read(char *into, int numBytes) {
-    int numRead = ReadAt(into, numBytes, currentOffset);
-    currentOffset += numRead;
-    return numRead;
-  }
-
-  int Write(char *from, int numBytes) {
-    int numWritten = WriteAt(from, numBytes, currentOffset);
-    currentOffset += numWritten;
-    return numWritten;
-  }
-
-  int Seek(int position) {
-    int len = Length();
-    // printf("length of file %d", len);
-    if (position == -1) {
-      currentOffset = Length();
-    } else {
-      if (position < -1 || position > len) {
-        return -1;
-      }
-      currentOffset = position;
-    }
-
-    return currentOffset;
-  }
-
-  int Length() {
-    Lseek(file, 0, 2);
-    return Tell(file);
-  }
+  int ReadAt(char *into, int numBytes, int position);
+  int WriteAt(char *from, int numBytes, int position);
+  int Read(char *into, int numBytes);
+  int Write(char *from, int numBytes);
+  int Seek(int position);
+  int Length();
 
 private:
-  int file;
-  int currentOffset;
+  int _fd;
+  int _mode;
+  int _currentOffset;
+  char *_fileName;
+  bool _isSocket;
 };
 
 #else  // FILESYS

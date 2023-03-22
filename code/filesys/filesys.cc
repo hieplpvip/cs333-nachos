@@ -42,15 +42,200 @@
 // Copyright (c) 1992-1993 The Regents of the University of California.
 // All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
-#ifndef FILESYS_STUB
 
 #include "copyright.h"
 #include "debug.h"
+#include "filesys.h"
+#include "main.h"
+#include "synchconsole.h"
+
+#ifdef FILESYS_STUB
+
+#define VALID_SLOT(slot) (slot >= RESERVED_FD && slot < FDT_SIZE && fileTable[slot] != NULL)
+
+int FileSystem::findFreeSlot() {
+  for (int i = RESERVED_FD; i < FDT_SIZE; ++i) {
+    if (fileTable[i] == NULL) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+FileSystem::FileSystem() {
+  memset(fileTable, 0, sizeof(fileTable));
+}
+
+FileSystem::~FileSystem() {
+  for (int i = 0; i < FDT_SIZE; ++i) {
+    if (fileTable[i] != NULL) {
+      delete fileTable[i];
+    }
+  }
+}
+
+OpenFile *FileSystem::Open(char *name) {
+  int fileDescriptor = OpenForReadWrite(name, FALSE);
+  if (fileDescriptor == -1) {
+    return NULL;
+  }
+  return new OpenFile(fileDescriptor, MODE_READ, name, false);
+}
+
+bool FileSystem::Create(char *name) {
+  int fileDescriptor = OpenForWrite(name);
+  Close(fileDescriptor);
+  return TRUE;
+}
+
+int FileSystem::Open(char *name, int mode) {
+  int slot = findFreeSlot();
+  if (slot == -1) {
+    return -1;
+  }
+
+  int fd = -1;
+  if (mode == MODE_READWRITE) {
+    fd = OpenForReadWrite(name, FALSE);
+  } else if (mode == MODE_READ) {
+    fd = OpenForRead(name);
+  }
+  if (fd < 0) {
+    return -1;
+  }
+
+  fileTable[slot] = new OpenFile(fd, mode, name, false);
+  return slot;
+}
+
+bool FileSystem::Close(int slot) {
+  if (!VALID_SLOT(slot)) {
+    return false;
+  }
+  delete fileTable[slot];
+  fileTable[slot] = NULL;
+  return true;
+}
+
+bool FileSystem::Remove(char *name) {
+  // Check if file is opened
+  for (int i = 2; i < FDT_SIZE; ++i) {
+    if (fileTable[i] == NULL) {
+      continue;
+    }
+    if (strcmp(fileTable[i]->fileName(), name) == 0) {
+      return false;
+    }
+  }
+  return Unlink(name) == 0;
+}
+
+int FileSystem::Read(int slot, char *buffer, int count) {
+  if (slot == 0) {
+    // Console Input
+    int numRead = 0;
+    for (int i = 0; i < count; ++i) {
+      buffer[i] = kernel->synchConsoleIn->GetChar();
+      if (buffer[i] == EOF) {
+        break;
+      }
+      ++numRead;
+    }
+    return numRead;
+  }
+
+  if (!VALID_SLOT(slot)) {
+    return -1;
+  }
+
+  return fileTable[slot]->Read(buffer, count);
+}
+
+int FileSystem::Write(int slot, char *buffer, int count) {
+  if (slot == 1) {
+    // Console Output
+    for (int i = 0; i < count; ++i) {
+      kernel->synchConsoleOut->PutChar(buffer[i]);
+    }
+    return count;
+  }
+
+  if (!VALID_SLOT(slot)) {
+    return -1;
+  }
+
+  if (fileTable[slot]->mode() == MODE_READ) {
+    DEBUG(dbgFile, "Can not write to file id " << slot);
+    return -1;
+  }
+
+  return fileTable[slot]->Write(buffer, count);
+}
+
+int FileSystem::Seek(int position, int slot) {
+  if (!VALID_SLOT(slot)) {
+    return -1;
+  }
+
+  return fileTable[slot]->Seek(position);
+}
+
+int FileSystem::CreateTCPSocket() {
+  int slot = findFreeSlot();
+  if (slot == -1) {
+    return -1;
+  }
+
+  int fd = OpenSocketInternet();
+  if (fd < -1) {
+    return -1;
+  }
+
+  fileTable[slot] = new OpenFile(fd, MODE_READWRITE, NULL, true);
+  return slot;
+}
+
+int FileSystem::ConnectTCPSocket(int slot, char *ip, int port) {
+  if (!VALID_SLOT(slot) || !fileTable[slot]->isSocket()) {
+    return -1;
+  }
+
+  return Connect(fileTable[slot]->fd(), ip, port);
+};
+
+int FileSystem::SendData(int slot, char *buffer, int count) {
+  if (!VALID_SLOT(slot) || !fileTable[slot]->isSocket()) {
+    return -1;
+  }
+
+  return fileTable[slot]->Read(buffer, count);
+}
+
+int FileSystem::ReceiveData(int slot, char *buffer, int count) {
+  if (!VALID_SLOT(slot) || !fileTable[slot]->isSocket()) {
+    return -1;
+  }
+
+  return fileTable[slot]->Write(buffer, count);
+}
+
+bool FileSystem::CloseTCPSocket(int slot) {
+  if (!VALID_SLOT(slot) || !fileTable[slot]->isSocket()) {
+    return false;
+  }
+
+  delete fileTable[slot];
+  fileTable[slot] = NULL;
+  return true;
+}
+
+#else
+
 #include "disk.h"
 #include "pbitmap.h"
 #include "directory.h"
 #include "filehdr.h"
-#include "filesys.h"
 
 // Sectors containing the file headers for the bitmap of free sectors,
 // and the directory of files.  These file headers are placed in well-known
