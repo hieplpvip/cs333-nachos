@@ -1,6 +1,25 @@
 #include "syscall.h"
 #include "copyright.h"
 
+int strcmp(const char *str1, const char *str2) {
+  int i;
+  for (i = 0; str1[i] || str2[i]; i++) {
+    if (!str1[i]) {
+      return -1;
+    }
+    if (!str2[i]) {
+      return 1;
+    }
+    if (str1[i] < str2[i]) {
+      return -1;
+    }
+    if (str1[i] > str2[i]) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
 int main(int argc, char **argv) {
   int src_fd;
   int dest_fd;
@@ -10,6 +29,14 @@ int main(int argc, char **argv) {
 
   if (argc < 3) {
     PrintString("Usage: copy <src> <dest>\n");
+    return 0;
+  }
+
+  if (strcmp(argv[1], argv[2]) == 0) {
+    PrintString(argv[1]);
+    PrintString(" and ");
+    PrintString(argv[2]);
+    PrintString(" are the same file\n");
     return 0;
   }
 

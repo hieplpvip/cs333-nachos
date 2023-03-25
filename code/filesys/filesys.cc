@@ -71,6 +71,7 @@ FileSystem::~FileSystem() {
   for (int i = 0; i < FDT_SIZE; i++) {
     if (fileTable[i] != NULL) {
       delete fileTable[i];
+      fileTable[i] = NULL;
     }
   }
 }
@@ -209,7 +210,7 @@ int FileSystem::SendData(int slot, char *buffer, int count) {
     return -1;
   }
 
-  return fileTable[slot]->Read(buffer, count);
+  return fileTable[slot]->Write(buffer, count);
 }
 
 int FileSystem::ReceiveData(int slot, char *buffer, int count) {
@@ -217,7 +218,7 @@ int FileSystem::ReceiveData(int slot, char *buffer, int count) {
     return -1;
   }
 
-  return fileTable[slot]->Write(buffer, count);
+  return fileTable[slot]->Read(buffer, count);
 }
 
 bool FileSystem::CloseTCPSocket(int slot) {
