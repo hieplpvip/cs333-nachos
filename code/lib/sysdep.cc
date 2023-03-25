@@ -282,10 +282,10 @@ bool PollFile(int fd) {
 //	"name" -- file name
 //----------------------------------------------------------------------
 
-int OpenForRead(char *name) {
+int OpenForRead(char *name, bool crashOnError) {
   int fd = open(name, O_RDONLY, 0666);
 
-  ASSERT(fd >= 0);
+  ASSERT(!crashOnError || fd >= 0);
   return fd;
 }
 
@@ -297,10 +297,10 @@ int OpenForRead(char *name) {
 //	"name" -- file name
 //----------------------------------------------------------------------
 
-int OpenForWrite(char *name) {
+int OpenForWrite(char *name, bool crashOnError) {
   int fd = open(name, O_RDWR | O_CREAT | O_TRUNC, 0666);
 
-  ASSERT(fd >= 0);
+  ASSERT(!crashOnError || fd >= 0);
   return fd;
 }
 

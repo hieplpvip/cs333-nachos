@@ -115,7 +115,7 @@ ConsoleOutput::ConsoleOutput(char *writeFile, CallBackObj *toCall) {
   if (writeFile == NULL)
     writeFileNo = 1;  // display = stdout
   else
-    writeFileNo = OpenForWrite(writeFile);
+    writeFileNo = OpenForWrite(writeFile, TRUE);
 
   callWhenDone = toCall;
   putBusy = FALSE;

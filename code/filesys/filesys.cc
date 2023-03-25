@@ -85,9 +85,12 @@ OpenFile *FileSystem::Open(char *name) {
 }
 
 bool FileSystem::Create(char *name) {
-  int fileDescriptor = OpenForWrite(name);
-  Close(fileDescriptor);
-  return TRUE;
+  int fileDescriptor = OpenForWrite(name, FALSE);
+  bool success = fileDescriptor >= 0;
+  if (success) {
+    Close(fileDescriptor);
+  }
+  return success;
 }
 
 int FileSystem::Open(char *name, int mode) {
@@ -100,7 +103,7 @@ int FileSystem::Open(char *name, int mode) {
   if (mode == MODE_READWRITE) {
     fd = OpenForReadWrite(name, FALSE);
   } else if (mode == MODE_READ) {
-    fd = OpenForRead(name);
+    fd = OpenForRead(name, FALSE);
   }
   if (fd < 0) {
     return -1;

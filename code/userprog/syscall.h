@@ -136,7 +136,7 @@ OpenFileId Open(char *name, int type);
  * Return the number of bytes actually read on success.
  * On failure, a negative error code is returned.
  */
-int Write(char *buffer, int charcount, OpenFileId id);
+int Write(char *buffer, int count, OpenFileId id);
 
 /* Read "size" bytes from the open file into "buffer".
  * Return the number of bytes actually read -- if the open file isn't
@@ -144,7 +144,7 @@ int Write(char *buffer, int charcount, OpenFileId id);
  * characters to read, return whatever is available (for I/O devices,
  * you should always wait until you can return at least one character).
  */
-int Read(char *buffer, int charcount, OpenFileId id);
+int Read(char *buffer, int count, OpenFileId id);
 
 /* Set the seek position of the open file "id"
  * to the byte "position".

@@ -26,6 +26,7 @@ OpenFile::OpenFile(int __fd, int __mode, char *__fileName, bool __isSocket) {
   if (__fileName) {
     int len = strlen(__fileName);
     _fileName = new char[len + 1];
+    ASSERT(_fileName != NULL);
     strcpy(_fileName, __fileName);
   } else {
     _fileName = NULL;

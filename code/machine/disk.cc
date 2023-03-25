@@ -51,7 +51,7 @@ Disk::Disk(CallBackObj *toCall) {
     Read(fileno, (char *)&magicNum, MagicSize);
     ASSERT(magicNum == MagicNumber);
   } else {  // file doesn't exist, create it
-    fileno = OpenForWrite(diskname);
+    fileno = OpenForWrite(diskname, TRUE);
     magicNum = MagicNumber;
     WriteFile(fileno, (char *)&magicNum, MagicSize);  // write magic number
 

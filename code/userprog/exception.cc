@@ -84,7 +84,7 @@ void handle_SC_PrintString() {
 
   char* s = StringUser2System(virtAddr);
   result = SysPrintString(s);
-  delete s;
+  delete[] s;
 
   return setReturnCodeAndIncrementPC(result);
 }
@@ -103,7 +103,7 @@ void handle_SC_Create() {
   StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
 
   result = SysCreate(filename);
-  delete filename;
+  delete[] filename;
 
   return setReturnCodeAndIncrementPC(result);
 }
@@ -123,7 +123,7 @@ void handle_SC_Open() {
   StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
 
   result = SysOpen(filename, mode);
-  delete filename;
+  delete[] filename;
 
   return setReturnCodeAndIncrementPC(result);
 }
@@ -154,7 +154,7 @@ void handle_SC_Read() {
   if (result > 0) {
     RawSystem2User(virtAddr, result, buffer);
   }
-  delete buffer;
+  delete[] buffer;
 
   return setReturnCodeAndIncrementPC(result);
 }
@@ -175,7 +175,7 @@ void handle_SC_Write() {
 
   RawUser2System(virtAddr, count, buffer);
   result = SysWrite(buffer, count, fileId);
-  delete buffer;
+  delete[] buffer;
 
   return setReturnCodeAndIncrementPC(result);
 }
@@ -203,7 +203,7 @@ void handle_SC_Remove() {
   StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
 
   result = SysRemove(filename);
-  delete filename;
+  delete[] filename;
 
   return setReturnCodeAndIncrementPC(result);
 }
@@ -231,7 +231,7 @@ void handle_SC_Connect() {
   StringUser2System(virtAddr, MAX_IP_ADDRESS_LENGTH, ip);
 
   result = SysConnect(socketId, ip, port);
-  delete ip;
+  delete[] ip;
 
   return setReturnCodeAndIncrementPC(result);
 }
@@ -257,7 +257,7 @@ void handle_SC_Send() {
   RawUser2System(virtAddr, len, buffer);
 
   result = SysSend(socketId, buffer, len);
-  delete buffer;
+  delete[] buffer;
 
   return setReturnCodeAndIncrementPC(result);
 }
@@ -275,7 +275,7 @@ void handle_SC_Receive() {
   if (result > 0) {
     RawSystem2User(virtAddr, result, buffer);
   }
-  delete buffer;
+  delete[] buffer;
 
   return setReturnCodeAndIncrementPC(result);
 }
