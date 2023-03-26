@@ -48,7 +48,7 @@ Disk::Disk(CallBackObj *toCall) {
   sprintf(diskname, "DISK_%d", kernel->hostName);
   fileno = OpenForReadWrite(diskname, FALSE);
   if (fileno >= 0) {  // file exists, check magic number
-    Read(fileno, (char *)&magicNum, MagicSize);
+    ReadFile(fileno, (char *)&magicNum, MagicSize);
     ASSERT(magicNum == MagicNumber);
   } else {  // file doesn't exist, create it
     fileno = OpenForWrite(diskname, TRUE);
@@ -114,7 +114,7 @@ void Disk::ReadRequest(int sectorNumber, char *data) {
 
   DEBUG(dbgDisk, "Reading from sector " << sectorNumber);
   Lseek(fileno, SectorSize * sectorNumber + MagicSize, 0);
-  Read(fileno, data, SectorSize);
+  ReadFile(fileno, data, SectorSize);
   if (debug->IsEnabled('d'))
     PrintSector(FALSE, sectorNumber, data);
 

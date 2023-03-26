@@ -320,11 +320,11 @@ int OpenForReadWrite(char *name, bool crashOnError) {
 }
 
 //----------------------------------------------------------------------
-// Read
+// ReadFile
 // 	Read characters from an open file.  Abort if read fails.
 //----------------------------------------------------------------------
 
-void Read(int fd, char *buffer, int nBytes) {
+void ReadFile(int fd, char *buffer, int nBytes) {
   int retVal = read(fd, buffer, nBytes);
   ASSERT(retVal == nBytes);
 }
@@ -347,6 +347,16 @@ int ReadPartial(int fd, char *buffer, int nBytes) {
 void WriteFile(int fd, char *buffer, int nBytes) {
   int retVal = write(fd, buffer, nBytes);
   ASSERT(retVal == nBytes);
+}
+
+//----------------------------------------------------------------------
+// WritePartial
+// 	Write characters to an open file, returning number of bytes
+//	written.
+//----------------------------------------------------------------------
+
+int WritePartial(int fd, char *buffer, int nBytes) {
+  return write(fd, buffer, nBytes);
 }
 
 //----------------------------------------------------------------------

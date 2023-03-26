@@ -69,8 +69,7 @@ int OpenFile::WriteAt(char *from, int numBytes, int position) {
   }
 
   Lseek(_fd, position, 0);
-  WriteFile(_fd, from, numBytes);
-  return numBytes;
+  return WritePartial(_fd, from, numBytes);
 }
 
 int OpenFile::Read(char *into, int numBytes) {
