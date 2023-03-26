@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
   }
 
   for (i = 1; i < argc; i++) {
-    fd = Open(argv[1], MODE_READ);
+    fd = Open(argv[i], MODE_READ);
     if (fd == -1) {
       PrintString("Failed to open file ");
       PrintString(argv[1]);
