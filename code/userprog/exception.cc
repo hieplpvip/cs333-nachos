@@ -96,12 +96,7 @@ void handle_SC_Create() {
   int result;
 
   char* filename = new char[MAX_FILE_NAME_LENGTH + 1];
-  if (filename == NULL) {
-    DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndAdvancePC(-1);
-  }
   StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
-
   result = SysCreate(filename);
   delete[] filename;
 
@@ -116,12 +111,7 @@ void handle_SC_Open() {
   int result;
 
   char* filename = new char[MAX_FILE_NAME_LENGTH + 1];
-  if (filename == NULL) {
-    DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndAdvancePC(-1);
-  }
   StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
-
   result = SysOpen(filename, mode);
   delete[] filename;
 
@@ -145,11 +135,6 @@ void handle_SC_Read() {
   int result;
 
   char* buffer = new char[count];
-  if (buffer == NULL) {
-    DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndAdvancePC(-1);
-  }
-
   result = SysRead(buffer, count, fileId);
   if (result > 0) {
     RawSystem2User(virtAddr, result, buffer);
@@ -168,11 +153,6 @@ void handle_SC_Write() {
   int result;
 
   char* buffer = new char[count];
-  if (buffer == NULL) {
-    DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndAdvancePC(-1);
-  }
-
   RawUser2System(virtAddr, count, buffer);
   result = SysWrite(buffer, count, fileId);
   delete[] buffer;
@@ -196,12 +176,7 @@ void handle_SC_Remove() {
   int result;
 
   char* filename = new char[MAX_FILE_NAME_LENGTH + 1];
-  if (filename == NULL) {
-    DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndAdvancePC(-1);
-  }
   StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
-
   result = SysRemove(filename);
   delete[] filename;
 
@@ -224,12 +199,7 @@ void handle_SC_Connect() {
   int result;
 
   char* ip = new char[MAX_IP_ADDRESS_LENGTH + 1];
-  if (ip == NULL) {
-    DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndAdvancePC(-1);
-  }
   StringUser2System(virtAddr, MAX_IP_ADDRESS_LENGTH, ip);
-
   result = SysConnect(socketId, ip, port);
   delete[] ip;
 
@@ -250,10 +220,6 @@ void handle_SC_Send() {
   }
 
   char* buffer = new char[len];
-  if (buffer == NULL) {
-    DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndAdvancePC(-1);
-  }
   RawUser2System(virtAddr, len, buffer);
 
   result = SysSend(socketId, buffer, len);
