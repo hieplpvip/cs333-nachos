@@ -142,4 +142,4 @@ private:
                    IntStatus now);  // simulated time
 };
 
-#endif  // INTERRRUPT_H
+#endif  // INTERRUPT_H

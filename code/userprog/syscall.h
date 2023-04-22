@@ -174,13 +174,13 @@ ThreadId ThreadFork(void (*func)());
 void ThreadYield();
 
 /*
- * Blocks current thread until lokal thread ThreadID exits with ThreadExit.
+ * Blocks current thread until local thread ThreadID exits with ThreadExit.
  * Function returns the ExitCode of ThreadExit() of the exiting thread.
  */
 int ThreadJoin(ThreadId id);
 
 /*
- * Deletes current thread and returns ExitCode to every waiting lokal thread.
+ * Deletes current thread and returns ExitCode to every waiting local thread.
  */
 void ThreadExit(int ExitCode);
 

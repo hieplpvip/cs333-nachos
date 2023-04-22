@@ -78,7 +78,7 @@ AddrSpace::AddrSpace() {
 
 //----------------------------------------------------------------------
 // AddrSpace::~AddrSpace
-// 	Dealloate an address space.
+// 	Deallocate an address space.
 //----------------------------------------------------------------------
 
 AddrSpace::~AddrSpace() {

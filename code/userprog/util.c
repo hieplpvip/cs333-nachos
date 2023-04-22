@@ -53,7 +53,7 @@ void RawSystem2User(int virtAddr, int size, char* buffer) {
 }
 
 void incrementPC() {
-  // Adapted from `machine/mipssim.cc`, line 667
+  // Adapted from `machine/mipssim.cc`, line 682
 
   // Set previous program counter (debugging only)
   kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));

@@ -7,7 +7,7 @@
 // 	Note that because we allocate a fixed size stack for each
 //	thread, it is possible to overflow the stack -- for instance,
 //	by recursing to too deep a level.  The most common reason
-//	for this occuring is allocating large data structures
+//	for this occurring is allocating large data structures
 //	on the stack.  For instance, this will cause problems:
 //
 //		void foo() { int buf[1000]; ...}

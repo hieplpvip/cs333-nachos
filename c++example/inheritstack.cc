@@ -1,5 +1,5 @@
 // inheritstack.cc
-//	Routines for two implementions of a LIFO stack of integers,
+//	Routines for two implementations of a LIFO stack of integers,
 //	one as an array, the other as a list.
 //
 // Copyright (c) 1992,1993,1995 The Regents of the University of California.

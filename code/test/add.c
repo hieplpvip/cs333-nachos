@@ -1,5 +1,5 @@
 /* add.c
- *	Simple program to test whether the systemcall interface works.
+ *	Simple program to test whether the system call interface works.
  *
  *	Just do a add syscall that adds two values and returns the result.
  *
