@@ -1,5 +1,5 @@
 # Copyright (c) 1992-1996 The Regents of the University of California.
-# All rights reserved.  See copyright.h for copyright notice and limitation 
+# All rights reserved.  See copyright.h for copyright notice and limitation
 # of liability and disclaimer of warranty provisions.
 #
 # This is a GNU Makefile.  It must be used with the GNU make program.
@@ -66,11 +66,11 @@
 #	(ULTRIX 4.2)	noether.math
 #
 #	If you are not sure what type of machine you are on,
-#	try the command "uname -a".  
+#	try the command "uname -a".
 #
 #   (2) Type "make depend"
 #		- this computes file dependencies and records them
-#			at the end of the file Makefile.dep in 
+#			at the end of the file Makefile.dep in
 #			your build directory.  Have a look...
 #
 #   (3) Type "make nachos"  (or just "make").
@@ -94,7 +94,7 @@
 #	  you may not change it, except as noted in machine/machine.h
 #     - When you want to re-make Nachos, always do it in the
 #	  "build" directory that is appropriate for the machine
-#	  type that you are running on.  
+#	  type that you are running on.
 #	DO NOT TRY TO MAKE NACHOS IN THE SOURCE CODE DIRECTORIES.
 #
 #     - IF all you have done is changed C++ code in existing files
@@ -170,7 +170,7 @@
 #	Rebuilding from scratch at least gives you a known starting
 #	place.  To rebuild from scratch, go to the appropriate
 #	build directory and do:
-#	
+#
 #		make distclean
 #		make depend
 #		make nachos
@@ -284,13 +284,15 @@ THREAD_O = alarm.o kernel.o main.o scheduler.o synch.o thread.o
 USERPROG_H = ../userprog/addrspace.h\
 	../userprog/syscall.h\
 	../userprog/synchconsole.h\
+	../userprog/util.h\
 	../userprog/noff.h
 
 USERPROG_C = ../userprog/addrspace.cc\
 	../userprog/exception.cc\
-	../userprog/synchconsole.cc
+	../userprog/synchconsole.cc\
+	../userprog/util.cc
 
-USERPROG_O = addrspace.o exception.o synchconsole.o
+USERPROG_O = addrspace.o exception.o synchconsole.o util.o
 
 FILESYS_H =../filesys/directory.h \
 	../filesys/filehdr.h\
@@ -347,7 +349,7 @@ depend: $(CFILES) $(HFILES)
 	@echo 'w' >>eddep
 	@echo 'q' >>eddep
 	ed - Makefile.dep < eddep
-	rm eddep makedep 
+	rm eddep makedep
 	@echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile.dep
 	@echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile.dep
 	@echo '# see make depend above' >> Makefile.dep

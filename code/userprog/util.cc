@@ -1,6 +1,5 @@
 #include "util.h"
-#include "kernel.h"
-#include "machine.h"
+#include "main.h"
 
 void RawUser2System(int virtAddr, int size, char* buffer) {
   int tmp;
@@ -35,10 +34,6 @@ char* StringUser2System(int virtAddr) {
   } while (tmp != 0);
 
   char* buffer = new char[len];
-  if (buffer == NULL) {
-    return NULL;
-  }
-
   for (int i = 0; i < len; i++) {
     kernel->machine->ReadMem(virtAddr + i, 1, &tmp);
     buffer[i] = (char)tmp;

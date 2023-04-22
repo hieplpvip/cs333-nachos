@@ -25,7 +25,7 @@
 #include "ksyscall.h"
 #include "main.h"
 #include "syscall.h"
-#include "util.c"
+#include "util.h"
 
 //----------------------------------------------------------------------
 // ExceptionHandler
