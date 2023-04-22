@@ -8,7 +8,7 @@ char* StringUser2System(int virtAddr);
 
 void RawSystem2User(int virtAddr, int size, char* buffer);
 
-void incrementPC();
-void setReturnCodeAndIncrementPC(int returnCode);
+void advancePC();
+void setReturnCodeAndAdvancePC(int returnCode);
 
 #endif

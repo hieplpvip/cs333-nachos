@@ -73,7 +73,7 @@ void handle_SC_Add() {
   int op1 = kernel->machine->ReadRegister(4);
   int op2 = kernel->machine->ReadRegister(5);
   int result = SysAdd(op1, op2);
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void handle_SC_PrintString() {
@@ -86,7 +86,7 @@ void handle_SC_PrintString() {
   result = SysPrintString(s);
   delete[] s;
 
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void handle_SC_Create() {
@@ -98,14 +98,14 @@ void handle_SC_Create() {
   char* filename = new char[MAX_FILE_NAME_LENGTH + 1];
   if (filename == NULL) {
     DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndIncrementPC(-1);
+    return setReturnCodeAndAdvancePC(-1);
   }
   StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
 
   result = SysCreate(filename);
   delete[] filename;
 
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void handle_SC_Open() {
@@ -118,14 +118,14 @@ void handle_SC_Open() {
   char* filename = new char[MAX_FILE_NAME_LENGTH + 1];
   if (filename == NULL) {
     DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndIncrementPC(-1);
+    return setReturnCodeAndAdvancePC(-1);
   }
   StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
 
   result = SysOpen(filename, mode);
   delete[] filename;
 
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void handle_SC_Close() {
@@ -133,7 +133,7 @@ void handle_SC_Close() {
 
   int fileId = kernel->machine->ReadRegister(4);
   int result = SysClose(fileId);
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void handle_SC_Read() {
@@ -147,7 +147,7 @@ void handle_SC_Read() {
   char* buffer = new char[count];
   if (buffer == NULL) {
     DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndIncrementPC(-1);
+    return setReturnCodeAndAdvancePC(-1);
   }
 
   result = SysRead(buffer, count, fileId);
@@ -156,7 +156,7 @@ void handle_SC_Read() {
   }
   delete[] buffer;
 
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void handle_SC_Write() {
@@ -170,14 +170,14 @@ void handle_SC_Write() {
   char* buffer = new char[count];
   if (buffer == NULL) {
     DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndIncrementPC(-1);
+    return setReturnCodeAndAdvancePC(-1);
   }
 
   RawUser2System(virtAddr, count, buffer);
   result = SysWrite(buffer, count, fileId);
   delete[] buffer;
 
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void handle_SC_Seek() {
@@ -186,7 +186,7 @@ void handle_SC_Seek() {
   int pos = kernel->machine->ReadRegister(4);
   int fileId = kernel->machine->ReadRegister(5);
   int result = SysSeek(pos, fileId);
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void handle_SC_Remove() {
@@ -198,21 +198,21 @@ void handle_SC_Remove() {
   char* filename = new char[MAX_FILE_NAME_LENGTH + 1];
   if (filename == NULL) {
     DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndIncrementPC(-1);
+    return setReturnCodeAndAdvancePC(-1);
   }
   StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
 
   result = SysRemove(filename);
   delete[] filename;
 
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void handle_SC_OpenSocket() {
   DEBUG(dbgSys, "Handle SC_OpenSocket");
 
   int result = SysOpenSocket();
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void handle_SC_Connect() {
@@ -226,14 +226,14 @@ void handle_SC_Connect() {
   char* ip = new char[MAX_IP_ADDRESS_LENGTH + 1];
   if (ip == NULL) {
     DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndIncrementPC(-1);
+    return setReturnCodeAndAdvancePC(-1);
   }
   StringUser2System(virtAddr, MAX_IP_ADDRESS_LENGTH, ip);
 
   result = SysConnect(socketId, ip, port);
   delete[] ip;
 
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void handle_SC_Send() {
@@ -246,20 +246,20 @@ void handle_SC_Send() {
 
   if (len <= 0) {
     DEBUG(dbgAddr, "Invalid length");
-    return setReturnCodeAndIncrementPC(-1);
+    return setReturnCodeAndAdvancePC(-1);
   }
 
   char* buffer = new char[len];
   if (buffer == NULL) {
     DEBUG(dbgAddr, "Not enough memory in system");
-    return setReturnCodeAndIncrementPC(-1);
+    return setReturnCodeAndAdvancePC(-1);
   }
   RawUser2System(virtAddr, len, buffer);
 
   result = SysSend(socketId, buffer, len);
   delete[] buffer;
 
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void handle_SC_Receive() {
@@ -277,7 +277,7 @@ void handle_SC_Receive() {
   }
   delete[] buffer;
 
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void handle_SC_CloseSocket() {
@@ -285,7 +285,7 @@ void handle_SC_CloseSocket() {
 
   int socketID = kernel->machine->ReadRegister(4);
   int result = SysCloseSocket(socketID);
-  return setReturnCodeAndIncrementPC(result);
+  return setReturnCodeAndAdvancePC(result);
 }
 
 void ExceptionHandler(ExceptionType which) {

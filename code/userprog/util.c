@@ -52,20 +52,15 @@ void RawSystem2User(int virtAddr, int size, char* buffer) {
   }
 }
 
-void incrementPC() {
+void advancePC() {
   // Adapted from `machine/mipssim.cc`, line 682
-
-  // Set previous program counter (debugging only)
+  int pcAfter = kernel->machine->ReadRegister(NextPCReg);
   kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-  // Set program counter to next instruction (all Instructions are 4 byte wide)
-  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-
-  // Set next program counter for branch execution
-  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+  kernel->machine->WriteRegister(PCReg, pcAfter);
+  kernel->machine->WriteRegister(NextPCReg, pcAfter + 4);
 }
 
-void setReturnCodeAndIncrementPC(int returnCode) {
+void setReturnCodeAndAdvancePC(int returnCode) {
   kernel->machine->WriteRegister(2, returnCode);
-  incrementPC();
+  advancePC();
 }
