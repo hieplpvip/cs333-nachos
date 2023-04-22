@@ -34,7 +34,9 @@ OpenFile::OpenFile(int __fd, int __mode, char *__fileName, bool __isSocket) {
 
 OpenFile::~OpenFile() {
   Close(_fd);
-  delete[] _fileName;
+  if (_fileName) {
+    delete[] _fileName;
+  }
 }
 
 int OpenFile::fd() const {
