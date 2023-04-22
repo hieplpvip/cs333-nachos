@@ -81,7 +81,7 @@ OpenFile *FileSystem::Open(char *name) {
   if (fileDescriptor == -1) {
     return NULL;
   }
-  return new OpenFile(fileDescriptor, MODE_READ, name, false);
+  return new OpenFile(fileDescriptor, MODE_READ, name, FALSE);
 }
 
 bool FileSystem::Create(char *name) {
@@ -109,17 +109,17 @@ int FileSystem::Open(char *name, int mode) {
     return -1;
   }
 
-  fileTable[slot] = new OpenFile(fd, mode, name, false);
+  fileTable[slot] = new OpenFile(fd, mode, name, FALSE);
   return slot;
 }
 
 bool FileSystem::Close(int slot) {
   if (!VALID_SLOT(slot)) {
-    return false;
+    return FALSE;
   }
   delete fileTable[slot];
   fileTable[slot] = NULL;
-  return true;
+  return TRUE;
 }
 
 bool FileSystem::Remove(char *name) {
@@ -129,7 +129,7 @@ bool FileSystem::Remove(char *name) {
       continue;
     }
     if (strcmp(fileTable[i]->fileName(), name) == 0) {
-      return false;
+      return FALSE;
     }
   }
   return Unlink(name) == 0;
@@ -196,7 +196,7 @@ int FileSystem::CreateTCPSocket() {
     return -1;
   }
 
-  fileTable[slot] = new OpenFile(fd, MODE_READWRITE, NULL, true);
+  fileTable[slot] = new OpenFile(fd, MODE_READWRITE, NULL, TRUE);
   return slot;
 }
 
@@ -226,12 +226,12 @@ int FileSystem::ReceiveData(int slot, char *buffer, int count) {
 
 bool FileSystem::CloseTCPSocket(int slot) {
   if (!VALID_SLOT(slot) || !fileTable[slot]->isSocket()) {
-    return false;
+    return FALSE;
   }
 
   delete fileTable[slot];
   fileTable[slot] = NULL;
-  return true;
+  return TRUE;
 }
 
 #else

@@ -159,9 +159,9 @@ int main(int argc, char **argv) {
   int i;
   char *debugArg = "";
   char *userProgName = NULL;  // default is not to execute a user prog
-  bool threadTestFlag = false;
-  bool consoleTestFlag = false;
-  bool networkTestFlag = false;
+  bool threadTestFlag = FALSE;
+  bool consoleTestFlag = FALSE;
+  bool networkTestFlag = FALSE;
   int userProgArgc = 0;
   char **userProgArgv = NULL;
 #ifndef FILESYS_STUB
@@ -169,8 +169,8 @@ int main(int argc, char **argv) {
   char *copyNachosFileName = NULL;  // name of copied file in Nachos
   char *printFileName = NULL;
   char *removeFileName = NULL;
-  bool dirListFlag = false;
-  bool dumpFlag = false;
+  bool dirListFlag = FALSE;
+  bool dumpFlag = FALSE;
 #endif  // FILESYS_STUB
 
   // some command line arguments are handled here.
@@ -211,9 +211,9 @@ int main(int argc, char **argv) {
       removeFileName = argv[i + 1];
       i++;
     } else if (strcmp(argv[i], "-l") == 0) {
-      dirListFlag = true;
+      dirListFlag = TRUE;
     } else if (strcmp(argv[i], "-D") == 0) {
-      dumpFlag = true;
+      dumpFlag = TRUE;
     }
 #endif  // FILESYS_STUB
     else if (strcmp(argv[i], "-u") == 0) {
