@@ -19,13 +19,6 @@ void SysHalt() {
   kernel->interrupt->Halt();
 }
 
-void SysExit(int code) {
-  DEBUG(dbgSys, "Exit with code " << code);
-
-  ASSERT(code == 0);
-  kernel->interrupt->Halt();
-}
-
 int SysAdd(int op1, int op2) {
   DEBUG(dbgSys, "Add " << op1 << " + " << op2);
 
@@ -173,6 +166,49 @@ int SysCloseSocket(int socketId) {
     return -1;
   }
   return 0;
+}
+
+int SysExec(const char* filename) {
+  DEBUG(dbgSys, "Exec " << filename);
+
+  return kernel->pTab->ExecUpdate(filename);
+}
+
+int SysExecV() {
+  // TODO
+  return -1;
+}
+
+int SysJoin(int pid) {
+  DEBUG(dbgSys, "Join " << pid);
+
+  return kernel->pTab->JoinUpdate(pid);
+}
+
+void SysExit(int code) {
+  DEBUG(dbgSys, "Exit with code " << code);
+
+  kernel->pTab->ExitUpdate(code);
+  kernel->interrupt->Halt();  // TODO: remove this when ExitUpdate is implemented
+  ASSERTNOTREACHED();
+}
+
+int SysCreateSemaphore(const char* name, int initialValue) {
+  DEBUG(dbgSys, "Create semaphore " << name << ", initial value " << initialValue);
+
+  return kernel->semTab->Create(name, initialValue);
+}
+
+int SysWait(const char* name) {
+  DEBUG(dbgSys, "Wait " << name);
+
+  return kernel->semTab->Wait(name);
+}
+
+int SysSignal(const char* name) {
+  DEBUG(dbgSys, "Signal " << name);
+
+  return kernel->semTab->Signal(name);
 }
 
 #endif /* ! __USERPROG_KSYSCALL_H__ */

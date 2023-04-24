@@ -274,7 +274,11 @@ MACHINE_O = interrupt.o stats.o timer.o console.o machine.o mipssim.o\
 THREAD_H = ../threads/alarm.h\
 	../threads/kernel.h\
 	../threads/main.h\
+	../threads/pcb.h\
+	../threads/ptable.h\
 	../threads/scheduler.h\
+	../threads/sem.h\
+	../threads/stable.h\
 	../threads/switch.h\
 	../threads/synch.h\
 	../threads/synchlist.h\
@@ -283,12 +287,16 @@ THREAD_H = ../threads/alarm.h\
 THREAD_C = ../threads/alarm.cc\
 	../threads/kernel.cc\
 	../threads/main.cc\
+	../threads/pcb.cc\
+	../threads/ptable.cc\
 	../threads/scheduler.cc\
+	../threads/sem.cc\
+	../threads/stable.cc\
 	../threads/synch.cc\
 	../threads/synchlist.cc\
 	../threads/thread.cc
 
-THREAD_O = alarm.o kernel.o main.o scheduler.o synch.o thread.o
+THREAD_O = alarm.o kernel.o main.o pcb.o ptable.o scheduler.o sem.o stable.o synch.o thread.o
 
 USERPROG_H = ../userprog/addrspace.h\
 	../userprog/syscall.h\

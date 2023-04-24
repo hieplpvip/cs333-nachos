@@ -43,6 +43,7 @@
 
 #include "machine.h"
 #include "addrspace.h"
+#include "pcb.h"
 
 // CPU register state to be saved on context switch.
 // The x86 needs to save only a few registers,
@@ -82,11 +83,11 @@ private:
   void *machineState[MachineStateSize];  // all registers except for stackTop
 
 public:
-  Thread(char *debugName);  // initialize a Thread
-  ~Thread();                // deallocate a Thread
-                            // NOTE -- thread being deleted
-                            // must not be running when delete
-                            // is called
+  Thread(const char *debugName);  // initialize a Thread
+  ~Thread();                      // deallocate a Thread
+                                  // NOTE -- thread being deleted
+                                  // must not be running when delete
+                                  // is called
 
   // basic thread operations
 
@@ -100,9 +101,10 @@ public:
   void Finish();               // The thread is done executing
 
   void CheckOverflow();  // Check if thread stack has overflowed
-  void setStatus(ThreadStatus st) { status = st; }
-  char *getName() { return (name); }
-  void Print() { cout << name; }
+  void setStatus(ThreadStatus st);
+  const char *getName() const;
+  void Print() const;
+  int getProcessID() const;
   void SelfTest();  // test whether thread impl is working
 
 private:
@@ -129,6 +131,8 @@ public:
   void RestoreUserState();  // restore user-level register state
 
   AddrSpace *space;  // User code this thread is running.
+  PCB *pcb;          // Process control block for the user process
+                     // running in this thread.
 };
 
 // external function, dummy routine whose sole job is to call Thread::Print

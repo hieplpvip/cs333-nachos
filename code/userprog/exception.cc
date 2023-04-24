@@ -59,14 +59,6 @@ void handle_SC_Halt() {
   ASSERTNOTREACHED();
 }
 
-void handle_SC_Exit() {
-  DEBUG(dbgSys, "Handle SC_Exit");
-
-  int code = kernel->machine->ReadRegister(4);
-  SysExit(code);
-  ASSERTNOTREACHED();
-}
-
 void handle_SC_Add() {
   DEBUG(dbgSys, "Handle SC_Add");
 
@@ -221,7 +213,6 @@ void handle_SC_Send() {
 
   char* buffer = new char[len];
   RawUser2System(virtAddr, len, buffer);
-
   result = SysSend(socketId, buffer, len);
   delete[] buffer;
 
@@ -254,6 +245,84 @@ void handle_SC_CloseSocket() {
   return setReturnCodeAndAdvancePC(result);
 }
 
+void handle_SC_Exec() {
+  DEBUG(dbgSys, "Handle SC_Exec");
+
+  int virtAddr = kernel->machine->ReadRegister(4);
+  int result;
+
+  char* filename = new char[MAX_FILE_NAME_LENGTH + 1];
+  StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
+  result = SysExec(filename);
+  delete[] filename;
+
+  return setReturnCodeAndAdvancePC(result);
+}
+
+void handle_SC_ExecV() {
+  DEBUG(dbgSys, "Handle SC_ExecV");
+
+  // TODO
+  int result = SysExecV();
+  return setReturnCodeAndAdvancePC(result);
+}
+
+void handle_SC_Join() {
+  DEBUG(dbgSys, "Handle SC_Join");
+
+  int pid = kernel->machine->ReadRegister(4);
+  int result = SysJoin(pid);
+  return setReturnCodeAndAdvancePC(result);
+}
+
+void handle_SC_Exit() {
+  DEBUG(dbgSys, "Handle SC_Exit");
+
+  int code = kernel->machine->ReadRegister(4);
+  SysExit(code);
+  ASSERTNOTREACHED();
+}
+
+void handle_SC_CreateSemaphore() {
+  DEBUG(dbgSys, "Handle SC_CreateSemaphore");
+
+  int virtAddr = kernel->machine->ReadRegister(4);
+  int initialValue = kernel->machine->ReadRegister(5);
+  int result;
+
+  char* name = StringUser2System(virtAddr);
+  result = SysCreateSemaphore(name, initialValue);
+  delete[] name;
+
+  return setReturnCodeAndAdvancePC(result);
+}
+
+void handle_SC_Wait() {
+  DEBUG(dbgSys, "Handle SC_Wait");
+
+  int virtAddr = kernel->machine->ReadRegister(4);
+  int result;
+
+  char* name = StringUser2System(virtAddr);
+  result = SysWait(name);
+  delete[] name;
+
+  return setReturnCodeAndAdvancePC(result);
+}
+
+void handle_SC_Signal() {
+  DEBUG(dbgSys, "Handle SC_Signal");
+
+  int virtAddr = kernel->machine->ReadRegister(4);
+  int result;
+
+  char* name = StringUser2System(virtAddr);
+  result = SysSignal(name);
+  delete[] name;
+
+  return setReturnCodeAndAdvancePC(result);
+}
+
 void ExceptionHandler(ExceptionType which) {
   int type = kernel->machine->ReadRegister(2);
 
@@ -268,8 +337,6 @@ void ExceptionHandler(ExceptionType which) {
       switch (type) {
         case SC_Halt:
           return handle_SC_Halt();
-        case SC_Exit:
-          return handle_SC_Exit();
         case SC_Add:
           return handle_SC_Add();
         case SC_PrintString:
@@ -298,6 +365,20 @@ void ExceptionHandler(ExceptionType which) {
           return handle_SC_Receive();
         case SC_CloseSocket:
           return handle_SC_CloseSocket();
+        case SC_Exec:
+          return handle_SC_Exec();
+        case SC_ExecV:
+          return handle_SC_ExecV();
+        case SC_Join:
+          return handle_SC_Join();
+        case SC_Exit:
+          return handle_SC_Exit();
+        case SC_CreateSemaphore:
+          return handle_SC_CreateSemaphore();
+        case SC_Wait:
+          return handle_SC_Wait();
+        case SC_Signal:
+          return handle_SC_Signal();
 
         default: {
           cerr << "Unexpected system call " << type << "\n";

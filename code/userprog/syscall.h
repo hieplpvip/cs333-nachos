@@ -40,6 +40,9 @@
 #define SC_Receive 19
 #define SC_CloseSocket 20
 #define SC_PrintString 21
+#define SC_CreateSemaphore 22
+#define SC_Wait 23
+#define SC_Signal 24
 
 #define SC_Add 42
 

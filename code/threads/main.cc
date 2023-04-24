@@ -233,7 +233,7 @@ int main(int argc, char **argv) {
 
   kernel = new Kernel(argc, argv);
 
-  kernel->Initialize();
+  kernel->Initialize(userProgName ? userProgName : "main");
 
   CallOnUserAbort(Cleanup);  // if user hits ctl-C
 
@@ -269,8 +269,7 @@ int main(int argc, char **argv) {
 
   // finally, run an initial user program if requested to do so
   if (userProgName != NULL) {
-    AddrSpace *space = new AddrSpace;
-    ASSERT(space != (AddrSpace *)NULL);
+    AddrSpace *space = new AddrSpace();
     if (space->Load(userProgName, userProgArgc, userProgArgv)) {  // load the program into the space
       space->Execute();                                           // run the program
       ASSERTNOTREACHED();                                         // Execute never returns

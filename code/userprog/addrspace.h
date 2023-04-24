@@ -20,7 +20,7 @@
 
 class AddrSpace {
 public:
-  AddrSpace();   // Create an address space.
+  AddrSpace();   // Create an address space
   ~AddrSpace();  // De-allocate an address space
 
   bool Load(char *fileName, int argc, char **argv);  // Load a program with command-line arguments
@@ -47,8 +47,14 @@ private:
   unsigned int argCount;        // Number of command-line arguments
   unsigned int argSize;         // Size of memory for command-line arguments
 
+  bool InitPageTable();  // Initialize page table
+
   void InitRegisters();  // Initialize user-level CPU registers,
                          // before jumping to user code
+
+  // Copy `size` bytes starting from `inFileAddr` in `file`
+  // to memory starting from `virtualAddr`.
+  void CopyFromFile(OpenFile *file, int inFileAddr, int size, int virtualAddr);
 };
 
 #endif  // ADDRSPACE_H

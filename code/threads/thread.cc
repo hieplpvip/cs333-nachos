@@ -33,8 +33,14 @@ const int STACK_FENCEPOST = 0xdedbeef;
 //	"threadName" is an arbitrary string, useful for debugging.
 //----------------------------------------------------------------------
 
-Thread::Thread(char *threadName) {
-  name = threadName;
+Thread::Thread(const char *threadName) {
+  if (threadName) {
+    name = new char[strlen(threadName) + 1];
+    strcpy(name, threadName);
+  } else {
+    name = NULL;
+  }
+
   stackTop = NULL;
   stack = NULL;
   status = JUST_CREATED;
@@ -44,6 +50,7 @@ Thread::Thread(char *threadName) {
                              // of machine registers
   }
   space = NULL;
+  pcb = NULL;
 }
 
 //----------------------------------------------------------------------
@@ -62,8 +69,15 @@ Thread::~Thread() {
   DEBUG(dbgThread, "Deleting thread: " << name);
 
   ASSERT(this != kernel->currentThread);
-  if (stack != NULL)
+  if (stack != NULL) {
     DeallocBoundedArray((char *)stack, StackSize * sizeof(int));
+  }
+  if (name) {
+    delete[] name;
+  }
+  if (space) {
+    delete space;
+  }
 }
 
 //----------------------------------------------------------------------
@@ -406,4 +420,21 @@ void Thread::SelfTest() {
   t->Fork((VoidFunctionPtr)SimpleThread, (void *)1);
   kernel->currentThread->Yield();
   SimpleThread(0);
+}
+
+void Thread::setStatus(ThreadStatus st) {
+  status = st;
+}
+
+const char *Thread::getName() const {
+  return name;
+}
+
+void Thread::Print() const {
+  cout << name;
+}
+
+int Thread::getProcessID() const {
+  ASSERT(pcb != NULL);
+  return pcb->GetProcessID();
 }

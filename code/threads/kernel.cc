@@ -83,11 +83,11 @@ Kernel::Kernel(int argc, char **argv) {
 //	data via the "kernel" global variable.
 //----------------------------------------------------------------------
 
-void Kernel::Initialize() {
+void Kernel::Initialize(const char *initName) {
   // We didn't explicitly allocate the current thread we are running in.
   // But if it ever tries to give up the CPU, we better have a Thread
   // object to save its state.
-  currentThread = new Thread("main");
+  currentThread = new Thread(initName);
   currentThread->setStatus(RUNNING);
 
   stats = new Statistics();        // collect statistics
@@ -105,6 +105,10 @@ void Kernel::Initialize() {
 #endif  // FILESYS_STUB
   postOfficeIn = new PostOfficeInput(10);
   postOfficeOut = new PostOfficeOutput(reliability);
+  addrLock = new Semaphore("addrLock", 1);
+  gPhysPageBitMap = new Bitmap(256);
+  semTab = new STable(10);
+  pTab = new PTable(10);
 
   interrupt->Enable();
 }
@@ -126,6 +130,10 @@ Kernel::~Kernel() {
   delete fileSystem;
   delete postOfficeIn;
   delete postOfficeOut;
+  delete addrLock;
+  delete gPhysPageBitMap;
+  delete semTab;
+  delete pTab;
 
   Exit(0);
 }

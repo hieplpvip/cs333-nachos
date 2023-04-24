@@ -18,12 +18,16 @@
 #include "alarm.h"
 #include "filesys.h"
 #include "machine.h"
+#include "bitmap.h"
+#include "stable.h"
+#include "ptable.h"
 
 class PostOfficeInput;
 class PostOfficeOutput;
 class SynchConsoleInput;
 class SynchConsoleOutput;
 class SynchDisk;
+class Semaphore;
 
 class Kernel {
 public:
@@ -31,9 +35,9 @@ public:
   // Interpret command line arguments
   ~Kernel();  // deallocate the kernel
 
-  void Initialize();  // initialize the kernel -- separated
-                      // from constructor because
-                      // refers to "kernel" as a global
+  void Initialize(const char *initName);  // initialize the kernel -- separated
+                                          // from constructor because
+                                          // refers to "kernel" as a global
 
   void ThreadSelfTest();  // self test of threads and synchronization
 
@@ -56,6 +60,10 @@ public:
   FileSystem *fileSystem;
   PostOfficeInput *postOfficeIn;
   PostOfficeOutput *postOfficeOut;
+  Semaphore *addrLock;
+  Bitmap *gPhysPageBitMap;
+  STable *semTab;
+  PTable *pTab;
 
   int hostName;  // machine identifier
 
