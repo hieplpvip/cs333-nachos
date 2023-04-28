@@ -1,24 +1,6 @@
 #include "syscall.h"
 #include "copyright.h"
-
-int strcmp(const char *str1, const char *str2) {
-  int i;
-  for (i = 0; str1[i] || str2[i]; i++) {
-    if (!str1[i]) {
-      return -1;
-    }
-    if (!str2[i]) {
-      return 1;
-    }
-    if (str1[i] < str2[i]) {
-      return -1;
-    }
-    if (str1[i] > str2[i]) {
-      return 1;
-    }
-  }
-  return 0;
-}
+#include "libc.h"
 
 int main(int argc, char **argv) {
   int src_fd;

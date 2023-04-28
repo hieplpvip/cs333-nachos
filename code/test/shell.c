@@ -1,4 +1,5 @@
 #include "syscall.h"
+#include "libc.h"
 
 int main() {
   SpaceId newProc;
@@ -23,6 +24,10 @@ int main() {
     buffer[--i] = '\0';
 
     if (i > 0) {
+      if (strcmp(buffer, "exit") == 0) {
+        return 0;
+      }
+
       newProc = Exec(buffer);
       Join(newProc);
     }

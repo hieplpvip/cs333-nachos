@@ -1,14 +1,6 @@
 #include "syscall.h"
 #include "copyright.h"
-
-int strlen(const char* str) {
-  int cnt = 0;
-  while (*str != 0) {
-    ++str;
-    ++cnt;
-  }
-  return cnt;
-}
+#include "libc.h"
 
 int main() {
   int fd[4], i;

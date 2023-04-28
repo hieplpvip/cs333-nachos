@@ -82,6 +82,7 @@ int PTable::ExitUpdate(int exitCode) {
   pcb[pid]->ExitWait();
 
   Remove(pid);
+  kernel->currentThread->Finish();
 }
 
 int PTable::JoinUpdate(int childPid) {

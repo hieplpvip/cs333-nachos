@@ -189,7 +189,6 @@ void SysExit(int code) {
   DEBUG(dbgSys, "Exit with code " << code);
 
   kernel->pTab->ExitUpdate(code);
-  kernel->interrupt->Halt();  // TODO: remove this when ExitUpdate is implemented
   ASSERTNOTREACHED();
 }
 
