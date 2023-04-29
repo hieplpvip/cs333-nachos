@@ -173,21 +173,24 @@ bool AddrSpace::Load(char *fileName, int argc, char **argv) {
     DEBUG(dbgAddr, "Copying " << argc << " arguments to memory.");
     int argAddr = size - argSize;
     int strAddr = argAddr + 4 * (argc + 1);
+    unsigned int physAddr;
     for (int i = 0; i < argc; i++) {
       int strLen = strlen(argv[i]) + 1;
 
       // write argument address
-      *(unsigned int *)&kernel->machine->mainMemory[argAddr] = WordToMachine((unsigned int)strAddr);
+      ASSERT(Translate(argAddr, &physAddr, TRUE) == NoException);
+      *(unsigned int *)&kernel->machine->mainMemory[physAddr] = WordToMachine((unsigned int)strAddr);
 
       // write argument string
-      memcpy(kernel->machine->mainMemory + strAddr, argv[i], strLen);
+      CopyFromBuffer(argv[i], strLen, strAddr);
 
       argAddr += 4;
       strAddr += strLen;
     }
 
     // zero terminate argument list
-    kernel->machine->mainMemory[argAddr] = 0;
+    ASSERT(Translate(argAddr, &physAddr, TRUE) == NoException);
+    kernel->machine->mainMemory[physAddr] = 0;
   }
 
   delete executable;  // close file
@@ -323,11 +326,34 @@ void AddrSpace::CopyFromFile(OpenFile *file, int inFileAddr, int size, int virtu
     int pfn = pageTable[vpn].physicalPage;
     int amount = min(PageSize - offset, size);
 
+    // Set the use and dirty bits
+    pageTable[vpn].use = TRUE;
+    pageTable[vpn].dirty = TRUE;
+
     file->ReadAt(&(kernel->machine->mainMemory[pfn * PageSize + offset]), amount, inFileAddr);
 
     size -= amount;
     virtualAddr += amount;
     inFileAddr += amount;
+  }
+}
+
+void AddrSpace::CopyFromBuffer(char *buf, int size, int virtualAddr) {
+  while (size > 0) {
+    int vpn = virtualAddr / PageSize;
+    int offset = virtualAddr % PageSize;
+    int pfn = pageTable[vpn].physicalPage;
+    int amount = min(PageSize - offset, size);
+
+    // Set the use and dirty bits
+    pageTable[vpn].use = TRUE;
+    pageTable[vpn].dirty = TRUE;
+
+    memcpy(&(kernel->machine->mainMemory[pfn * PageSize + offset]), buf, amount);
+
+    size -= amount;
+    virtualAddr += amount;
+    buf += amount;
   }
 }
 

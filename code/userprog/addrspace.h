@@ -53,8 +53,12 @@ private:
                          // before jumping to user code
 
   // Copy `size` bytes starting from `inFileAddr` in `file`
-  // to memory starting from `virtualAddr`.
+  // to virtual memory starting from `virtualAddr`.
   void CopyFromFile(OpenFile *file, int inFileAddr, int size, int virtualAddr);
+
+  // Copy `size` bytes starting from `buf` in kernel memory
+  // to virtual memory starting from `virtualAddr`.
+  void CopyFromBuffer(char *buf, int size, int virtualAddr);
 };
 
 #endif  // ADDRSPACE_H
