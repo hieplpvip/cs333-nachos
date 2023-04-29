@@ -40,9 +40,11 @@
 #define FDT_SIZE 20
 #define RESERVED_FD 2
 
-#ifdef FILESYS_STUB  // Temporarily implement file system calls as \
-                     // calls to UNIX, until the real file system  \
-                     // implementation is available
+#ifdef FILESYS_STUB
+// Temporarily implement file system calls as
+// calls to UNIX, until the real file system
+// implementation is available
+
 class FileSystem {
 private:
   OpenFile *fileTable[FDT_SIZE];

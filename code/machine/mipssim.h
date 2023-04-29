@@ -141,7 +141,7 @@ enum RegType { NONE,
                EXTRA };
 
 struct OpString {
-  char *format;  // Printed version of instruction
+  const char *format;  // Printed version of instruction
   RegType args[3];
 };
 

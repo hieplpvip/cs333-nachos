@@ -22,7 +22,7 @@
 //		to be enabled.
 //----------------------------------------------------------------------
 
-Debug::Debug(char *flagList) {
+Debug::Debug(const char *flagList) {
   enableFlags = flagList;
 }
 

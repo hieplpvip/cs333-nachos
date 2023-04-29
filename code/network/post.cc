@@ -276,7 +276,7 @@ PostOfficeOutput::~PostOfficeOutput() {
 //	"data" -- payload message data
 //----------------------------------------------------------------------
 
-void PostOfficeOutput::Send(PacketHeader pktHdr, MailHeader mailHdr, char *data) {
+void PostOfficeOutput::Send(PacketHeader pktHdr, MailHeader mailHdr, const char *data) {
   char *buffer = new char[MaxPacketSize];  // space to hold concatenated
                                            // mailHdr + data
 

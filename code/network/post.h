@@ -134,7 +134,7 @@ public:
   //   get dropped by the underlying network
   ~PostOfficeOutput();  // De-allocate Post Office data
 
-  void Send(PacketHeader pktHdr, MailHeader mailHdr, char *data);
+  void Send(PacketHeader pktHdr, MailHeader mailHdr, const char *data);
   // Send a message to a mailbox on a remote
   // machine.  The fromBox in the MailHeader is
   // the return box for ack's.

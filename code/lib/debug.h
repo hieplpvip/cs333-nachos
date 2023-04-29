@@ -32,12 +32,12 @@ const char dbgSys = 'u';     // systemcall
 
 class Debug {
 public:
-  Debug(char *flagList);
+  Debug(const char *flagList);
 
   bool IsEnabled(char flag);
 
 private:
-  char *enableFlags;  // controls which DEBUG messages are printed
+  const char *enableFlags;  // controls which DEBUG messages are printed
 };
 
 extern Debug *debug;

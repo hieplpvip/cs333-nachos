@@ -157,7 +157,7 @@ void Print(char *name) {
 
 int main(int argc, char **argv) {
   int i;
-  char *debugArg = "";
+  const char *debugArg = "";
   char *userProgName = NULL;  // default is not to execute a user prog
   bool threadTestFlag = FALSE;
   bool consoleTestFlag = FALSE;

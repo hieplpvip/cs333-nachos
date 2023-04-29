@@ -39,17 +39,17 @@
 
 class Semaphore {
 public:
-  Semaphore(char *debugName, int initialValue);  // set initial value
-  ~Semaphore();                                  // de-allocate semaphore
-  char *getName() { return name; }               // debugging assist
+  Semaphore(const char *debugName, int initialValue);  // set initial value
+  ~Semaphore();                                        // de-allocate semaphore
+  const char *getName() const { return name; }         // debugging assist
 
   void P();         // these are the only operations on a semaphore
   void V();         // they are both *atomic*
   void SelfTest();  // test routine for semaphore implementation
 
 private:
-  char *name;  // useful for debugging
-  int value;   // semaphore value, always >= 0
+  const char *name;  // useful for debugging
+  int value;         // semaphore value, always >= 0
   List<Thread *> *queue;
   // threads waiting in P() for the value to be > 0
 };
@@ -68,9 +68,9 @@ private:
 
 class Lock {
 public:
-  Lock(char *debugName);            // initialize lock to be FREE
-  ~Lock();                          // deallocate lock
-  char *getName() { return name; }  // debugging assist
+  Lock(const char *debugName);                  // initialize lock to be FREE
+  ~Lock();                                      // deallocate lock
+  const char *getName() const { return name; }  // debugging assist
 
   void Acquire();  // these are the only operations on a lock
   void Release();  // they are both *atomic*
@@ -84,7 +84,7 @@ public:
   // Note: SelfTest routine provided by SynchList
 
 private:
-  char *name;            // debugging assist
+  const char *name;      // debugging assist
   Thread *lockHolder;    // thread currently holding lock
   Semaphore *semaphore;  // we use a semaphore to implement lock
 };
@@ -124,10 +124,10 @@ private:
 
 class Condition {
 public:
-  Condition(char *debugName);  // initialize condition to
-                               // "no one waiting"
-  ~Condition();                // deallocate the condition
-  char *getName() { return (name); }
+  Condition(const char *debugName);  // initialize condition to
+                                     // "no one waiting"
+  ~Condition();                      // deallocate the condition
+  const char *getName() const { return (name); }
 
   void Wait(Lock *conditionLock);       // these are the 3 operations on
                                         // condition variables; releasing the
@@ -139,7 +139,7 @@ public:
   // SelfTest routine provided by SyncLists
 
 private:
-  char *name;
+  const char *name;
   List<Semaphore *> *waitQueue;  // list of waiting threads
 };
 #endif  // SYNCH_H

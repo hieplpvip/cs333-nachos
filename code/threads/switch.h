@@ -210,9 +210,7 @@
 #define InitialArgState 1  //  (P2/4 - 1)  // user function argument
 #define WhenDonePCState 2  //  (P3/4 - 1)  // clean up function addr
 #define StartupPCState 3   //  (P4/4 - 1)  // start up function addr
-#define PCState 60         //  (LR/4 - 1)  // ThreadRoot addr (first time). \
-                           // Later PC addr when SWITCH                     \
-                           // occurred
+#define PCState 60         //  (LR/4 - 1)  // ThreadRoot addr (first time). Later PC addr when SWITCH occurred
 
 #define InitialLR 21
 #define InitialArg 22

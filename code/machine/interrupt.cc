@@ -26,10 +26,10 @@
 
 // String definitions for debugging messages
 
-static char *intLevelNames[] = {"off", "on"};
-static char *intTypeNames[] = {"timer", "disk", "console write",
-                               "console read", "network send",
-                               "network recv"};
+static const char *intLevelNames[] = {"off", "on"};
+static const char *intTypeNames[] = {"timer", "disk", "console write",
+                                     "console read", "network send",
+                                     "network recv"};
 
 //----------------------------------------------------------------------
 // PendingInterrupt::PendingInterrupt

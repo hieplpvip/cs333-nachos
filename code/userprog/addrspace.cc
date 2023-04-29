@@ -74,7 +74,7 @@ AddrSpace::AddrSpace() {
 AddrSpace::~AddrSpace() {
   if (pageTable) {
     // Free up pages
-    for (int i = 0; i < numPages; i++) {
+    for (unsigned int i = 0; i < numPages; i++) {
       if (pageTable[i].valid) {
         kernel->gPhysPageBitMap->Clear(pageTable[i].physicalPage);
       }
@@ -232,14 +232,14 @@ bool AddrSpace::InitPageTable() {
 
   kernel->addrLock->P();
 
-  if (numPages > kernel->gPhysPageBitMap->NumClear()) {
+  if (numPages > (unsigned int)kernel->gPhysPageBitMap->NumClear()) {
     DEBUG(dbgAddr, "Not enough free pages");
     kernel->addrLock->V();
     return FALSE;
   }
 
   pageTable = new TranslationEntry[numPages];
-  for (int i = 0; i < numPages; i++) {
+  for (unsigned int i = 0; i < numPages; i++) {
     pageTable[i].virtualPage = i;
     pageTable[i].physicalPage = kernel->gPhysPageBitMap->FindAndSet();
     pageTable[i].valid = TRUE;

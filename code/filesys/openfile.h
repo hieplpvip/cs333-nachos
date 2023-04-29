@@ -24,9 +24,10 @@
 #include "utility.h"
 #include "sysdep.h"
 
-#ifdef FILESYS_STUB  // Temporarily implement calls to       \
-                     // Nachos file system as calls to UNIX! \
-                     // See definitions listed under #else
+#ifdef FILESYS_STUB
+// Temporarily implement calls to
+// Nachos file system as calls to UNIX!
+// See definitions listed under #else
 
 #define MODE_READWRITE 0
 #define MODE_READ 1

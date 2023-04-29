@@ -49,7 +49,7 @@ HashInt(int key) {
 //----------------------------------------------------------------------
 
 static int
-HashKey(char *str) {
+HashKey(const char *str) {
   return atoi(str);
 }
 
@@ -58,8 +58,8 @@ static int listTestVector[] = {9, 5, 7};
 
 // Array of values to be inserted into the HashTable
 // There are enough here to force a ReHash().
-static char *hashTestVector[] = {"0", "1", "2", "3", "4", "5", "6",
-                                 "7", "8", "9", "10", "11", "12", "13", "14"};
+static const char *hashTestVector[] = {"0", "1", "2", "3", "4", "5", "6",
+                                       "7", "8", "9", "10", "11", "12", "13", "14"};
 
 //----------------------------------------------------------------------
 // LibSelfTest
@@ -71,8 +71,8 @@ void LibSelfTest() {
   Bitmap *map = new Bitmap(200);
   List<int> *list = new List<int>;
   SortedList<int> *sortList = new SortedList<int>(IntCompare);
-  HashTable<int, char *> *hashTable =
-      new HashTable<int, char *>(HashKey, HashInt);
+  HashTable<int, const char *> *hashTable =
+      new HashTable<int, const char *>(HashKey, HashInt);
 
   map->SelfTest();
   list->SelfTest(listTestVector, sizeof(listTestVector) / sizeof(int));
