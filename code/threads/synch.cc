@@ -45,6 +45,7 @@
 //----------------------------------------------------------------------
 
 Semaphore::Semaphore(const char *debugName, int initialValue) {
+  ASSERT(debugName != NULL);
   name = debugName;
   value = initialValue;
   queue = new List<Thread *>;
@@ -147,6 +148,7 @@ void Semaphore::SelfTest() {
 //----------------------------------------------------------------------
 
 Lock::Lock(const char *debugName) {
+  ASSERT(debugName != NULL);
   name = debugName;
   semaphore = new Semaphore("lock", 1);  // initially, unlocked
   lockHolder = NULL;
@@ -198,6 +200,7 @@ void Lock::Release() {
 //	"debugName" is an arbitrary name, useful for debugging.
 //----------------------------------------------------------------------
 Condition::Condition(const char *debugName) {
+  ASSERT(debugName != NULL);
   name = debugName;
   waitQueue = new List<Semaphore *>;
 }

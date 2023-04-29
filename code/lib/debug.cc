@@ -23,6 +23,7 @@
 //----------------------------------------------------------------------
 
 Debug::Debug(const char *flagList) {
+  ASSERT(flagList != NULL);
   enableFlags = flagList;
 }
 

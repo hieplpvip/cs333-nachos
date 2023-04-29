@@ -34,12 +34,9 @@ const int STACK_FENCEPOST = 0xdedbeef;
 //----------------------------------------------------------------------
 
 Thread::Thread(const char *threadName) {
-  if (threadName) {
-    name = new char[strlen(threadName) + 1];
-    strcpy(name, threadName);
-  } else {
-    name = NULL;
-  }
+  ASSERT(threadName != NULL);
+  name = new char[strlen(threadName) + 1];
+  strcpy(name, threadName);
 
   stackTop = NULL;
   stack = NULL;
