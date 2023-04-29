@@ -65,7 +65,7 @@ int PTable::ExecUpdate(const char* name) {
   return pid;
 }
 
-int PTable::ExitUpdate(int exitCode) {
+void PTable::ExitUpdate(int exitCode) {
   int pid = kernel->currentThread->getProcessID();
   if (pid == 0) {
     // Main process

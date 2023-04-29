@@ -26,7 +26,7 @@ public:
   int ExecUpdate(const char*);
 
   // Process the syscall SC_Exit
-  int ExitUpdate(int exitCode);
+  void ExitUpdate(int exitCode);
 
   // Process the syscall SC_Join
   int JoinUpdate(int childPid);
