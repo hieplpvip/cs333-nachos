@@ -15,8 +15,9 @@ PTable::PTable(int _size) {
   // Reserve pid 0 for the init process (i.e. current thread)
   bmsem->P();
   bm->Mark(0);
-  pcb[0] = new PCB(kernel->currentThread->getName(), 0, -1);
+  pcb[0] = new PCB(0, -1);
   pcb[0]->thread = kernel->currentThread;
+  pcb[0]->setFileName(kernel->currentThread->getName());
   kernel->currentThread->pcb = pcb[0];
   bmsem->V();
 }
@@ -40,8 +41,8 @@ void PTable::Remove(int pid) {
   bm->Clear(pid);
 }
 
-int PTable::ExecUpdate(const char* name) {
-  if (name == NULL) {
+int PTable::ExecUpdate(int argc, char** argv) {
+  if (argc <= 0) {
     return -1;
   }
 
@@ -53,8 +54,8 @@ int PTable::ExecUpdate(const char* name) {
     return -1;
   }
 
-  pcb[pid] = new PCB(name, pid, kernel->currentThread->getProcessID());
-  if (pcb[pid]->Exec() == -1) {
+  pcb[pid] = new PCB(pid, kernel->currentThread->getProcessID());
+  if (pcb[pid]->Exec(argc, argv) == -1) {
     // Failed to start new process
     Remove(pid);
     pid = -1;

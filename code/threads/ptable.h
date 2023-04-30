@@ -23,7 +23,7 @@ public:
   ~PTable();
 
   // Process the syscall SC_Exec
-  int ExecUpdate(const char*);
+  int ExecUpdate(int argc, char** argv);
 
   // Process the syscall SC_Exit
   void ExitUpdate(int exitCode);

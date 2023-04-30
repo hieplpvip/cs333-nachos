@@ -4,11 +4,8 @@
 #include "synch.h"
 #include "thread.h"
 
-PCB::PCB(const char* _filename, int pid, int _parentId) {
-  ASSERT(_filename != NULL);
-  filename = new char[strlen(_filename) + 1];
-  strcpy(filename, _filename);
-
+PCB::PCB(int pid, int _parentId) {
+  filename = NULL;
   joinsem = new Semaphore("joinsem", 0);
   exitsem = new Semaphore("exitsem", 0);
   thread = NULL;
@@ -32,14 +29,21 @@ void startProcess(void* arg) {
   ASSERTNOTREACHED();
 }
 
-int PCB::Exec() {
+int PCB::Exec(int argc, char** argv) {
+  if (argc <= 0) {
+    return -1;
+  }
+
+  ASSERT(filename == NULL);
+  filename = new char[strlen(argv[0]) + 1];
+  strcpy(filename, argv[0]);
+
   ASSERT(thread == NULL);
   thread = new Thread(filename);
   thread->pcb = this;
 
   AddrSpace* space = new AddrSpace();
-  // FIXME: copy filename to argv[0]
-  if (!space->Load(filename, 0, NULL)) {
+  if (!space->Load(filename, argc, argv)) {
     return -1;
   }
 
@@ -79,6 +83,12 @@ void PCB::SetExitCode(int exitCode) {
 
 int PCB::GetExitCode() const {
   return exitCode;
+}
+
+void PCB::setFileName(const char* name) {
+  ASSERT(filename == NULL);
+  filename = new char[strlen(name) + 1];
+  strcpy(filename, name);
 }
 
 const char* PCB::GetFileName() const {

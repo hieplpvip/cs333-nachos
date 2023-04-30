@@ -18,11 +18,11 @@ private:
 public:
   Thread* thread;
 
-  PCB(const char* filename, int pid, int parentId);
+  PCB(int pid, int parentId);
   ~PCB();
 
   // Start the process
-  int Exec();
+  int Exec(int argc, char** argv);
 
   // Return the PID of the current process
   int GetProcessID() const;
@@ -47,6 +47,9 @@ public:
 
   // Return the exitcode
   int GetExitCode() const;
+
+  // Set the file name (can only be called once)
+  void setFileName(const char* name);
 
   // Return the file name
   const char* GetFileName() const;

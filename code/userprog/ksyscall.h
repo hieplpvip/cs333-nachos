@@ -168,15 +168,10 @@ int SysCloseSocket(int socketId) {
   return 0;
 }
 
-int SysExec(const char* filename) {
-  DEBUG(dbgSys, "Exec " << filename);
+int SysExecV(int argc, char** argv) {
+  DEBUG(dbgSys, "ExecV " << argc << ' ' << argv[0]);
 
-  return kernel->pTab->ExecUpdate(filename);
-}
-
-int SysExecV() {
-  // TODO
-  return -1;
+  return kernel->pTab->ExecUpdate(argc, argv);
 }
 
 int SysJoin(int pid) {

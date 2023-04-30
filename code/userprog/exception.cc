@@ -251,10 +251,13 @@ void handle_SC_Exec() {
   int virtAddr = kernel->machine->ReadRegister(4);
   int result;
 
-  char* filename = new char[MAX_FILE_NAME_LENGTH + 1];
-  StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
-  result = SysExec(filename);
-  delete[] filename;
+  // Copy filename from user space to kernel space and put it in argv[0],
+  // then call SysExecV
+  int argc = 1;
+  char* argv[1];
+  argv[0] = StringUser2System(virtAddr);
+  result = SysExecV(argc, argv);
+  delete[] argv[0];
 
   return setReturnCodeAndAdvancePC(result);
 }
@@ -262,8 +265,27 @@ void handle_SC_Exec() {
 void handle_SC_ExecV() {
   DEBUG(dbgSys, "Handle SC_ExecV");
 
-  // TODO
-  int result = SysExecV();
+  int argc = kernel->machine->ReadRegister(4);
+  int argvUser = kernel->machine->ReadRegister(5);
+  int result;
+
+  // Copy argv from user space to kernel space
+  char** argv = new char*[argc];
+  for (int i = 0; i < argc; i++) {
+    int virtAddr;
+    kernel->machine->ReadMem(argvUser + i * 4, 4, &virtAddr);
+    argv[i] = StringUser2System(virtAddr);
+  }
+
+  // Execute
+  result = SysExecV(argc, argv);
+
+  // Free argv
+  for (int i = 0; i < argc; i++) {
+    delete[] argv[i];
+  }
+  delete[] argv;
+
   return setReturnCodeAndAdvancePC(result);
 }
 
