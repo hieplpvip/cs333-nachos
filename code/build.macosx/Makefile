@@ -220,6 +220,7 @@ PROGRAM = nachos
 #
 
 LIB_H = ../lib/bitmap.h\
+	../lib/constant.h\
 	../lib/copyright.h\
 	../lib/debug.h\
 	../lib/hash.h\

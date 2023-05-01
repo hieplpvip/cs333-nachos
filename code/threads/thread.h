@@ -54,10 +54,6 @@
 
 #define MachineStateSize 75
 
-// Size of the thread's private execution stack.
-// WATCH OUT IF THIS ISN'T BIG ENOUGH!!!!!
-const int StackSize = (8 * 1024);  // in words
-
 // Thread state
 enum ThreadStatus { JUST_CREATED,
                     RUNNING,

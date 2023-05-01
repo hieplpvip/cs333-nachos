@@ -51,10 +51,10 @@
 
 #ifdef FILESYS_STUB
 
-#define VALID_SLOT(slot) (slot >= RESERVED_FD && slot < FDT_SIZE && fileTable[slot] != NULL)
+#define VALID_SLOT(slot) (slot >= RESERVED_FD && slot < GlobalFileTableSize && fileTable[slot] != NULL)
 
 int FileSystem::findFreeSlot() {
-  for (int i = RESERVED_FD; i < FDT_SIZE; i++) {
+  for (int i = RESERVED_FD; i < GlobalFileTableSize; i++) {
     if (fileTable[i] == NULL) {
       return i;
     }
@@ -68,7 +68,7 @@ FileSystem::FileSystem() {
 }
 
 FileSystem::~FileSystem() {
-  for (int i = 0; i < FDT_SIZE; i++) {
+  for (int i = 0; i < GlobalFileTableSize; i++) {
     if (fileTable[i] != NULL) {
       delete fileTable[i];
       fileTable[i] = NULL;
@@ -124,7 +124,7 @@ bool FileSystem::Close(int slot) {
 
 bool FileSystem::Remove(char *name) {
   // Check if file is opened
-  for (int i = 2; i < FDT_SIZE; i++) {
+  for (int i = 2; i < GlobalFileTableSize; i++) {
     if (fileTable[i] == NULL) {
       continue;
     }

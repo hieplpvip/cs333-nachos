@@ -16,6 +16,7 @@
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
+#include "constant.h"
 #include "main.h"
 #include "addrspace.h"
 #include "machine.h"

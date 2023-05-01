@@ -16,8 +16,6 @@
 #include "copyright.h"
 #include "filesys.h"
 
-#define UserStackSize 1024  // increase this as necessary!
-
 class AddrSpace {
 public:
   AddrSpace();   // Create an address space

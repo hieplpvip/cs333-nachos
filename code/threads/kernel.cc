@@ -6,6 +6,7 @@
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
+#include "constant.h"
 #include "debug.h"
 #include "main.h"
 #include "kernel.h"
@@ -106,9 +107,9 @@ void Kernel::Initialize(const char *initName) {
   postOfficeIn = new PostOfficeInput(10);
   postOfficeOut = new PostOfficeOutput(reliability);
   addrLock = new Semaphore("addrLock", 1);
-  gPhysPageBitMap = new Bitmap(256);
-  processTable = new ProcessTable(10);
-  semaphoreTable = new SemaphoreTable(10);
+  gPhysPageBitMap = new Bitmap(NumPhysPages);
+  processTable = new ProcessTable(NumProcesses);
+  semaphoreTable = new SemaphoreTable(NumSemaphores);
 
   interrupt->Enable();
 }

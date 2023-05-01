@@ -22,6 +22,7 @@
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
+#include "constant.h"
 #include "ksyscall.h"
 #include "main.h"
 #include "syscall.h"
@@ -49,9 +50,6 @@
 //	"which" is the kind of exception.  The list of possible exceptions
 //	is in machine.h.
 //----------------------------------------------------------------------
-
-#define MAX_FILE_NAME_LENGTH 32
-#define MAX_IP_ADDRESS_LENGTH 15
 
 void handle_SC_Halt() {
   DEBUG(dbgSys, "Shutdown, initiated by user program.\n");
@@ -87,8 +85,8 @@ void handle_SC_Create() {
   int virtAddr = kernel->machine->ReadRegister(4);
   int result;
 
-  char* filename = new char[MAX_FILE_NAME_LENGTH + 1];
-  StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
+  char* filename = new char[MaxFileNameLen + 1];
+  StringUser2System(virtAddr, MaxFileNameLen, filename);
   result = SysCreate(filename);
   delete[] filename;
 
@@ -102,8 +100,8 @@ void handle_SC_Open() {
   int mode = kernel->machine->ReadRegister(5);
   int result;
 
-  char* filename = new char[MAX_FILE_NAME_LENGTH + 1];
-  StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
+  char* filename = new char[MaxFileNameLen + 1];
+  StringUser2System(virtAddr, MaxFileNameLen, filename);
   result = SysOpen(filename, mode);
   delete[] filename;
 
@@ -167,8 +165,8 @@ void handle_SC_Remove() {
   int virtAddr = kernel->machine->ReadRegister(4);
   int result;
 
-  char* filename = new char[MAX_FILE_NAME_LENGTH + 1];
-  StringUser2System(virtAddr, MAX_FILE_NAME_LENGTH, filename);
+  char* filename = new char[MaxFileNameLen + 1];
+  StringUser2System(virtAddr, MaxFileNameLen, filename);
   result = SysRemove(filename);
   delete[] filename;
 
@@ -190,8 +188,8 @@ void handle_SC_Connect() {
   int port = kernel->machine->ReadRegister(6);
   int result;
 
-  char* ip = new char[MAX_IP_ADDRESS_LENGTH + 1];
-  StringUser2System(virtAddr, MAX_IP_ADDRESS_LENGTH, ip);
+  char* ip = new char[MaxIPAddressLen + 1];
+  StringUser2System(virtAddr, MaxIPAddressLen, ip);
   result = SysConnect(socketId, ip, port);
   delete[] ip;
 

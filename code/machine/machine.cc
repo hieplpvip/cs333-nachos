@@ -8,6 +8,7 @@
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
+#include "constant.h"
 #include "machine.h"
 #include "main.h"
 

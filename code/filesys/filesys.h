@@ -34,10 +34,10 @@
 #define FS_H
 
 #include "copyright.h"
-#include "sysdep.h"
+#include "constant.h"
 #include "openfile.h"
+#include "sysdep.h"
 
-#define FDT_SIZE 20
 #define RESERVED_FD 2
 
 #ifdef FILESYS_STUB
@@ -45,9 +45,11 @@
 // calls to UNIX, until the real file system
 // implementation is available
 
+const int GlobalFileTableSize = NumOpenFilesPerProcess * NumProcesses;
+
 class FileSystem {
 private:
-  OpenFile *fileTable[FDT_SIZE];
+  OpenFile *fileTable[GlobalFileTableSize];
 
   int findFreeSlot();
 

@@ -67,7 +67,7 @@ Thread::~Thread() {
 
   ASSERT(this != kernel->currentThread);
   if (stack != NULL) {
-    DeallocBoundedArray((char *)stack, StackSize * sizeof(int));
+    DeallocBoundedArray((char *)stack, ThreadStackSize * sizeof(int));
   }
   if (name) {
     delete[] name;
@@ -130,7 +130,7 @@ void Thread::Fork(VoidFunctionPtr func, void *arg) {
 void Thread::CheckOverflow() {
   if (stack != NULL) {
 #ifdef HPUX  // Stacks grow upward on the Snakes
-    ASSERT(stack[StackSize - 1] == STACK_FENCEPOST);
+    ASSERT(stack[ThreadStackSize - 1] == STACK_FENCEPOST);
 #else
     ASSERT(*stack == STACK_FENCEPOST);
 #endif
@@ -299,34 +299,34 @@ PLabelToAddr(void *plabel) {
 //----------------------------------------------------------------------
 
 void Thread::StackAllocate(VoidFunctionPtr func, void *arg) {
-  stack = (int *)AllocBoundedArray(StackSize * sizeof(int));
+  stack = (int *)AllocBoundedArray(ThreadStackSize * sizeof(int));
 
 #ifdef PARISC
   // HP stack works from low addresses to high addresses
   // everyone else works the other way: from high addresses to low addresses
   stackTop = stack + 16;  // HP requires 64-byte frame marker
-  stack[StackSize - 1] = STACK_FENCEPOST;
+  stack[ThreadStackSize - 1] = STACK_FENCEPOST;
 #endif
 
 #ifdef SPARC
-  stackTop = stack + StackSize - 96;  // SPARC stack must contains at
-                                      // least 1 activation record
-                                      // to start with.
+  stackTop = stack + ThreadStackSize - 96;  // SPARC stack must contains at
+                                            // least 1 activation record
+                                            // to start with.
   *stack = STACK_FENCEPOST;
 #endif
 
-#ifdef PowerPC                        // RS6000
-  stackTop = stack + StackSize - 16;  // RS6000 requires 64-byte frame marker
+#ifdef PowerPC                              // RS6000
+  stackTop = stack + ThreadStackSize - 16;  // RS6000 requires 64-byte frame marker
   *stack = STACK_FENCEPOST;
 #endif
 
 #ifdef DECMIPS
-  stackTop = stack + StackSize - 4;  // -4 to be on the safe side!
+  stackTop = stack + ThreadStackSize - 4;  // -4 to be on the safe side!
   *stack = STACK_FENCEPOST;
 #endif
 
 #ifdef ALPHA
-  stackTop = stack + StackSize - 8;  // -8 to be on the safe side!
+  stackTop = stack + ThreadStackSize - 8;  // -8 to be on the safe side!
   *stack = STACK_FENCEPOST;
 #endif
 
@@ -334,7 +334,7 @@ void Thread::StackAllocate(VoidFunctionPtr func, void *arg) {
   // the x86 passes the return address on the stack.  In order for SWITCH()
   // to go to ThreadRoot when we switch to this thread, the return address
   // used in SWITCH() must be the starting address of ThreadRoot.
-  stackTop = stack + StackSize - 4;  // -4 to be on the safe side!
+  stackTop = stack + ThreadStackSize - 4;  // -4 to be on the safe side!
   *(--stackTop) = (int)ThreadRoot;
   *stack = STACK_FENCEPOST;
 #endif

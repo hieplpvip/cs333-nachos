@@ -18,6 +18,7 @@
 #define DISK_H
 
 #include "copyright.h"
+#include "constant.h"
 #include "utility.h"
 #include "callback.h"
 
@@ -47,11 +48,7 @@
 //
 // The track buffer simulation can be disabled by compiling with -DNOTRACKBUF
 
-const int SectorSize = 128;      // number of bytes per disk sector
-const int SectorsPerTrack = 32;  // number of sectors per disk track
-const int NumTracks = 32;        // number of tracks per disk
-const int NumSectors = (SectorsPerTrack * NumTracks);
-// total # of sectors per disk
+const int NumSectors = (SectorsPerTrack * NumTracks);  // total # of sectors per disk
 
 class Disk : public CallBackObj {
 public:
