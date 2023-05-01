@@ -3,12 +3,11 @@
 #include "ptable.h"
 #include "synch.h"
 
-ProcessTable::ProcessTable(int _size) {
-  size = _size;
-  bitmap = new Bitmap(size);
+ProcessTable::ProcessTable() {
+  bitmap = new Bitmap(NumProcesses);
   bitmapMutex = new Semaphore("bitmapMutex", 1);
-  table = new PCB*[size];
-  for (int i = 0; i < size; i++) {
+  table = new PCB*[NumProcesses];
+  for (int i = 0; i < NumProcesses; i++) {
     table[i] = NULL;
   }
 
@@ -25,7 +24,7 @@ ProcessTable::ProcessTable(int _size) {
 ProcessTable::~ProcessTable() {
   delete bitmap;
   delete bitmapMutex;
-  for (int i = 0; i < size; i++) {
+  for (int i = 0; i < NumProcesses; i++) {
     if (table[i]) {
       delete table[i];
     }
@@ -34,7 +33,7 @@ ProcessTable::~ProcessTable() {
 }
 
 void ProcessTable::Remove(int pid) {
-  ASSERT(pid >= 0 && pid < size);
+  ASSERT(pid >= 0 && pid < NumProcesses);
   ASSERT(table[pid] != NULL);
   delete table[pid];
   table[pid] = NULL;
@@ -42,7 +41,7 @@ void ProcessTable::Remove(int pid) {
 }
 
 bool ProcessTable::IsValidPID(int pid) const {
-  return (pid >= 0 && pid < size && table[pid] != NULL);
+  return (pid >= 0 && pid < NumProcesses && table[pid] != NULL);
 }
 
 PCB* ProcessTable::GetPCB(int pid) const {

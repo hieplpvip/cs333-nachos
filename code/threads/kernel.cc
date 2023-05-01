@@ -108,7 +108,7 @@ void Kernel::Initialize(const char *initName) {
   postOfficeOut = new PostOfficeOutput(reliability);
   addrLock = new Semaphore("addrLock", 1);
   gPhysPageBitMap = new Bitmap(NumPhysPages);
-  processTable = new ProcessTable(NumProcesses);
+  processTable = new ProcessTable();
   semaphoreTable = new SemaphoreTable(NumSemaphores);
 
   interrupt->Enable();

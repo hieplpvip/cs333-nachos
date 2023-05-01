@@ -10,7 +10,6 @@ class Semaphore;
 
 class ProcessTable {
 private:
-  int size;
   Bitmap* bitmap;
   Semaphore* bitmapMutex;
   PCB** table;
@@ -19,7 +18,7 @@ private:
   void Remove(int pid);
 
 public:
-  ProcessTable(int size);
+  ProcessTable();
   ~ProcessTable();
 
   // Check if the PID is valid
