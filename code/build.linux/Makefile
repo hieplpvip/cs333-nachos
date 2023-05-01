@@ -277,7 +277,6 @@ THREAD_H = ../threads/alarm.h\
 	../threads/pcb.h\
 	../threads/ptable.h\
 	../threads/scheduler.h\
-	../threads/sem.h\
 	../threads/stable.h\
 	../threads/switch.h\
 	../threads/synch.h\
@@ -290,26 +289,25 @@ THREAD_C = ../threads/alarm.cc\
 	../threads/pcb.cc\
 	../threads/ptable.cc\
 	../threads/scheduler.cc\
-	../threads/sem.cc\
 	../threads/stable.cc\
 	../threads/synch.cc\
 	../threads/synchlist.cc\
 	../threads/thread.cc
 
-THREAD_O = alarm.o kernel.o main.o pcb.o ptable.o scheduler.o sem.o stable.o synch.o thread.o
+THREAD_O = alarm.o kernel.o main.o pcb.o ptable.o scheduler.o stable.o synch.o thread.o
 
 USERPROG_H = ../userprog/addrspace.h\
 	../userprog/syscall.h\
 	../userprog/synchconsole.h\
-	../userprog/util.h\
+	../userprog/utils.h\
 	../userprog/noff.h
 
 USERPROG_C = ../userprog/addrspace.cc\
 	../userprog/exception.cc\
 	../userprog/synchconsole.cc\
-	../userprog/util.cc
+	../userprog/utils.cc
 
-USERPROG_O = addrspace.o exception.o synchconsole.o util.o
+USERPROG_O = addrspace.o exception.o synchconsole.o utils.o
 
 FILESYS_H =../filesys/directory.h \
 	../filesys/filehdr.h\

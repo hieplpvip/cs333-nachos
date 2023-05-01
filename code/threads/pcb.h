@@ -9,8 +9,8 @@ class Thread;
 class PCB {
 private:
   char* filename;
-  Semaphore* joinsem;
-  Semaphore* exitsem;
+  Semaphore* joinSem;
+  Semaphore* exitSem;
   int processID;
   int parentID;
   int exitCode;
@@ -22,7 +22,7 @@ public:
   ~PCB();
 
   // Start the process
-  int Exec(int argc, char** argv);
+  int Execute(int argc, char** argv);
 
   // Return the PID of the current process
   int GetProcessID() const;

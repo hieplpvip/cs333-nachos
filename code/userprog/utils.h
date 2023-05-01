@@ -1,6 +1,7 @@
+// utils.h
 
-#ifndef USERPROG_UTIL_H
-#define USERPROG_UTIL_H
+#ifndef UTILS_H
+#define UTILS_H
 
 void RawUser2System(int virtAddr, int size, char* buffer);
 int StringUser2System(int virtAddr, int limit, char* buffer);
@@ -11,4 +12,4 @@ void RawSystem2User(int virtAddr, int size, char* buffer);
 void advancePC();
 void setReturnCodeAndAdvancePC(int returnCode);
 
-#endif
+#endif  // UTILS_H

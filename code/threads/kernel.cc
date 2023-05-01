@@ -97,7 +97,7 @@ void Kernel::Initialize(const char *initName) {
   machine = new Machine(debugUserProg);
   synchConsoleIn = new SynchConsoleInput(consoleIn);     // input from stdin
   synchConsoleOut = new SynchConsoleOutput(consoleOut);  // output to stdout
-  synchDisk = new SynchDisk();                           //
+  synchDisk = new SynchDisk();
 #ifdef FILESYS_STUB
   fileSystem = new FileSystem();
 #else
@@ -107,8 +107,8 @@ void Kernel::Initialize(const char *initName) {
   postOfficeOut = new PostOfficeOutput(reliability);
   addrLock = new Semaphore("addrLock", 1);
   gPhysPageBitMap = new Bitmap(256);
-  semTab = new STable(10);
-  pTab = new PTable(10);
+  processTable = new ProcessTable(10);
+  semaphoreTable = new SemaphoreTable(10);
 
   interrupt->Enable();
 }
@@ -132,8 +132,8 @@ Kernel::~Kernel() {
   delete postOfficeOut;
   delete addrLock;
   delete gPhysPageBitMap;
-  delete semTab;
-  delete pTab;
+  delete processTable;
+  delete semaphoreTable;
 
   Exit(0);
 }

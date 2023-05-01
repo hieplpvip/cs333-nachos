@@ -8,34 +8,33 @@
 
 class Semaphore;
 
-class PTable {
+class ProcessTable {
 private:
   int size;
-  Bitmap* bm;        // mark the locations that have been used in pcb
-  Semaphore* bmsem;  // used to prevent the case of loading 2 processes at the same time
-  PCB** pcb;
+  Bitmap* bitmap;
+  Semaphore* bitmapMutex;
+  PCB** table;
 
   // Remove the PCB entry of the process with PID = pid
   void Remove(int pid);
 
 public:
-  PTable(int size);
-  ~PTable();
+  ProcessTable(int size);
+  ~ProcessTable();
 
-  // Process the syscall SC_Exec
-  int ExecUpdate(int argc, char** argv);
+  // Check if the PID is valid
+  bool IsValidPID(int pid) const;
 
-  // Process the syscall SC_Exit
-  void ExitUpdate(int exitCode);
+  PCB* GetPCB(int pid) const;
+
+  // Fork and exec a new process
+  int ExecV(int argc, char** argv);
 
   // Process the syscall SC_Join
-  int JoinUpdate(int childPid);
+  int Join(int childPid);
 
-  // Check a process exist or not
-  bool IsExist(int pid) const;
-
-  // Return the process's file name
-  const char* GetFileName(int pid) const;
+  // Process the syscall SC_Exit
+  void Exit(int exitCode);
 };
 
 #endif  // PTABLE_H

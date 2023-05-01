@@ -6,8 +6,8 @@
 
 PCB::PCB(int pid, int _parentId) {
   filename = NULL;
-  joinsem = new Semaphore("joinsem", 0);
-  exitsem = new Semaphore("exitsem", 0);
+  joinSem = new Semaphore("joinSem", 0);
+  exitSem = new Semaphore("exitSem", 0);
   thread = NULL;
   processID = pid;
   parentID = _parentId;
@@ -19,8 +19,8 @@ PCB::~PCB() {
   // It is the job of the scheduler (see Scheduler::CheckToBeDestroyed)
 
   delete[] filename;
-  delete joinsem;
-  delete exitsem;
+  delete joinSem;
+  delete exitSem;
 }
 
 void startProcess(void* arg) {
@@ -29,7 +29,7 @@ void startProcess(void* arg) {
   ASSERTNOTREACHED();
 }
 
-int PCB::Exec(int argc, char** argv) {
+int PCB::Execute(int argc, char** argv) {
   if (argc <= 0) {
     return -1;
   }
@@ -62,19 +62,19 @@ int PCB::GetParentID() const {
 }
 
 void PCB::JoinWait() {
-  joinsem->P();
+  joinSem->P();
 }
 
 void PCB::JoinRelease() {
-  joinsem->V();
+  joinSem->V();
 }
 
 void PCB::ExitWait() {
-  exitsem->P();
+  exitSem->P();
 }
 
 void PCB::ExitRelease() {
-  exitsem->V();
+  exitSem->V();
 }
 
 void PCB::SetExitCode(int exitCode) {

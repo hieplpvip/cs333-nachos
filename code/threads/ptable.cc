@@ -3,70 +3,100 @@
 #include "ptable.h"
 #include "synch.h"
 
-PTable::PTable(int _size) {
+ProcessTable::ProcessTable(int _size) {
   size = _size;
-  bm = new Bitmap(size);
-  bmsem = new Semaphore("bmsem", 1);
-  pcb = new PCB*[size];
+  bitmap = new Bitmap(size);
+  bitmapMutex = new Semaphore("bitmapMutex", 1);
+  table = new PCB*[size];
   for (int i = 0; i < size; i++) {
-    pcb[i] = NULL;
+    table[i] = NULL;
   }
 
   // Reserve pid 0 for the init process (i.e. current thread)
-  bmsem->P();
-  bm->Mark(0);
-  pcb[0] = new PCB(0, -1);
-  pcb[0]->thread = kernel->currentThread;
-  pcb[0]->setFileName(kernel->currentThread->getName());
-  kernel->currentThread->pcb = pcb[0];
-  bmsem->V();
+  bitmapMutex->P();
+  bitmap->Mark(0);
+  table[0] = new PCB(0, -1);
+  table[0]->thread = kernel->currentThread;
+  table[0]->setFileName(kernel->currentThread->getName());
+  kernel->currentThread->pcb = table[0];
+  bitmapMutex->V();
 }
 
-PTable::~PTable() {
-  delete bm;
-  delete bmsem;
+ProcessTable::~ProcessTable() {
+  delete bitmap;
+  delete bitmapMutex;
   for (int i = 0; i < size; i++) {
-    if (pcb[i]) {
-      delete pcb[i];
+    if (table[i]) {
+      delete table[i];
     }
   }
-  delete[] pcb;
+  delete[] table;
 }
 
-void PTable::Remove(int pid) {
+void ProcessTable::Remove(int pid) {
   ASSERT(pid >= 0 && pid < size);
-  ASSERT(pcb[pid] != NULL);
-  delete pcb[pid];
-  pcb[pid] = NULL;
-  bm->Clear(pid);
+  ASSERT(table[pid] != NULL);
+  delete table[pid];
+  table[pid] = NULL;
+  bitmap->Clear(pid);
 }
 
-int PTable::ExecUpdate(int argc, char** argv) {
+bool ProcessTable::IsValidPID(int pid) const {
+  return (pid >= 0 && pid < size && table[pid] != NULL);
+}
+
+PCB* ProcessTable::GetPCB(int pid) const {
+  if (!IsValidPID(pid)) {
+    return NULL;
+  }
+  return table[pid];
+}
+
+int ProcessTable::ExecV(int argc, char** argv) {
   if (argc <= 0) {
     return -1;
   }
 
-  bmsem->P();
+  bitmapMutex->P();
 
-  int pid = bm->FindAndSet();
+  int pid = bitmap->FindAndSet();
   if (pid == -1) {
     // No free slot
     return -1;
   }
 
-  pcb[pid] = new PCB(pid, kernel->currentThread->getProcessID());
-  if (pcb[pid]->Exec(argc, argv) == -1) {
-    // Failed to start new process
+  table[pid] = new PCB(pid, kernel->currentThread->getProcessID());
+  if (table[pid]->Execute(argc, argv) == -1) {
+    // Failed to execute new process
     Remove(pid);
     pid = -1;
   }
 
-  bmsem->V();
+  bitmapMutex->V();
 
   return pid;
 }
 
-void PTable::ExitUpdate(int exitCode) {
+int ProcessTable::Join(int childPid) {
+  int pid = kernel->currentThread->getProcessID();
+  if (!IsValidPID(childPid) || table[childPid]->GetParentID() != pid) {
+    // Invalid child pid or not child of current process
+    return -1;
+  }
+
+  // Wait for child process to exit
+  table[childPid]->JoinWait();
+
+  // Handle exit code of child process
+  int exitCode = table[childPid]->GetExitCode();
+
+  // Release child process so it can finally exit
+  table[childPid]->ExitRelease();
+
+  return exitCode;
+}
+
+void ProcessTable::Exit(int exitCode) {
   int pid = kernel->currentThread->getProcessID();
   if (pid == 0) {
     // Main process
@@ -74,42 +104,14 @@ void PTable::ExitUpdate(int exitCode) {
     ASSERTNOTREACHED();
   }
 
-  pcb[pid]->SetExitCode(exitCode);
+  table[pid]->SetExitCode(exitCode);
 
   // Release parent process if it is waiting for this process
-  pcb[pid]->JoinRelease();
+  table[pid]->JoinRelease();
 
   // Wait for parent process to handle exit code
-  pcb[pid]->ExitWait();
+  table[pid]->ExitWait();
 
   Remove(pid);
   kernel->currentThread->Finish();
-}
-
-int PTable::JoinUpdate(int childPid) {
-  int pid = kernel->currentThread->getProcessID();
-  if (!IsExist(childPid) || pcb[childPid]->GetParentID() != pid) {
-    // Invalid child pid or not child of current process
-    return -1;
-  }
-
-  // Wait for child process to exit
-  pcb[childPid]->JoinWait();
-
-  // Handle exit code of child process
-  int exitCode = pcb[childPid]->GetExitCode();
-
-  // Release child process so it can finally exit
-  pcb[childPid]->ExitRelease();
-
-  return exitCode;
-}
-
-bool PTable::IsExist(int pid) const {
-  return (pid >= 0 && pid < size && pcb[pid] != NULL);
-}
-
-const char* PTable::GetFileName(int pid) const {
-  ASSERT(pid >= 0 && pid < size);
-  return pcb[pid]->GetFileName();
 }

@@ -62,8 +62,8 @@ public:
   PostOfficeOutput *postOfficeOut;
   Semaphore *addrLock;
   Bitmap *gPhysPageBitMap;
-  STable *semTab;
-  PTable *pTab;
+  ProcessTable *processTable;
+  SemaphoreTable *semaphoreTable;
 
   int hostName;  // machine identifier
 

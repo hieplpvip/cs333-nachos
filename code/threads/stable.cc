@@ -1,71 +1,77 @@
 // stable.cc
 
 #include "stable.h"
+#include "synch.h"
 #include "string.h"
 
-STable::STable(int _size) {
+SemaphoreTable::SemaphoreTable(int _size) {
   size = _size;
-  bm = new Bitmap(size);
-  semTab = new Sem*[size];
+  bitmap = new Bitmap(size);
+  table = new Semaphore*[size];
   for (int i = 0; i < size; i++) {
-    semTab[i] = NULL;
+    table[i] = NULL;
   }
 }
 
-STable::~STable() {
-  delete bm;
+SemaphoreTable::~SemaphoreTable() {
+  delete bitmap;
   for (int i = 0; i < size; i++) {
-    if (semTab[i]) {
-      delete semTab[i];
+    if (table[i]) {
+      delete[] table[i]->getName();
+      delete table[i];
     }
   }
-  delete[] semTab;
+  delete[] table;
 }
 
-int STable::FindSlotByName(const char* name) const {
+int SemaphoreTable::FindSlotByName(const char* name) const {
   for (int i = 0; i < size; i++) {
-    if (bm->Test(i) && strcmp(name, semTab[i]->getName()) == 0) {
+    if (bitmap->Test(i) && strcmp(name, table[i]->getName()) == 0) {
       return i;
     }
   }
   return -1;
 }
 
-int STable::Create(const char* name, int init) {
-  int slot = FindSlotByName(name);
+int SemaphoreTable::Create(const char* _name, int initialValue) {
+  ASSERT(_name != NULL);
+
+  int slot = FindSlotByName(_name);
   if (slot != -1) {
     // A semaphore with this name already exists
     return -1;
   }
 
-  slot = bm->FindAndSet();
+  slot = bitmap->FindAndSet();
   if (slot == -1) {
     // No free slot
     return -1;
   }
 
-  semTab[slot] = new Sem(name, init);
+  char* name = new char[strlen(_name) + 1];
+  strcpy(name, _name);
+  table[slot] = new Semaphore(name, initialValue);
   return 0;
 }
 
-int STable::Wait(const char* name) {
+int SemaphoreTable::Wait(const char* name) {
   int slot = FindSlotByName(name);
   if (slot == -1) {
     // No semaphore with this name
     return -1;
   }
 
-  semTab[slot]->wait();
+  table[slot]->P();
   return 0;
 }
 
-int STable::Signal(const char* name) {
+int SemaphoreTable::Signal(const char* name) {
   int slot = FindSlotByName(name);
   if (slot == -1) {
     // No semaphore with this name
     return -1;
   }
 
-  semTab[slot]->signal();
+  table[slot]->V();
   return 0;
 }

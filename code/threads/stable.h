@@ -4,23 +4,24 @@
 #define STABLE_H
 
 #include "bitmap.h"
-#include "sem.h"
 
-class STable {
+class Semaphore;
+
+class SemaphoreTable {
 private:
   int size;
-  Bitmap* bm;  // Manage the free slot
-  Sem** semTab;
+  Bitmap* bitmap;  // Manage the free slot
+  Semaphore** table;
 
   int FindSlotByName(const char* name) const;
 
 public:
-  STable(int size);
-  ~STable();
+  SemaphoreTable(int size);
+  ~SemaphoreTable();
 
   // Create a semaphore with name and initial value
   // Return 0 if success, -1 if error
-  int Create(const char* name, int init);
+  int Create(const char* name, int initialValue);
 
   // Wait for the semaphore
   // Return 0 if success, -1 if error

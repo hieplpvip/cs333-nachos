@@ -171,38 +171,38 @@ int SysCloseSocket(int socketId) {
 int SysExecV(int argc, char** argv) {
   DEBUG(dbgSys, "ExecV " << argc << ' ' << argv[0]);
 
-  return kernel->pTab->ExecUpdate(argc, argv);
+  return kernel->processTable->ExecV(argc, argv);
 }
 
 int SysJoin(int pid) {
   DEBUG(dbgSys, "Join " << pid);
 
-  return kernel->pTab->JoinUpdate(pid);
+  return kernel->processTable->Join(pid);
 }
 
 void SysExit(int code) {
   DEBUG(dbgSys, "Exit with code " << code);
 
-  kernel->pTab->ExitUpdate(code);
+  kernel->processTable->Exit(code);
   ASSERTNOTREACHED();
 }
 
 int SysCreateSemaphore(const char* name, int initialValue) {
   DEBUG(dbgSys, "Create semaphore " << name << ", initial value " << initialValue);
 
-  return kernel->semTab->Create(name, initialValue);
+  return kernel->semaphoreTable->Create(name, initialValue);
 }
 
 int SysWait(const char* name) {
   DEBUG(dbgSys, "Wait " << name);
 
-  return kernel->semTab->Wait(name);
+  return kernel->semaphoreTable->Wait(name);
 }
 
 int SysSignal(const char* name) {
   DEBUG(dbgSys, "Signal " << name);
 
-  return kernel->semTab->Signal(name);
+  return kernel->semaphoreTable->Signal(name);
 }
 
 #endif /* ! __USERPROG_KSYSCALL_H__ */
