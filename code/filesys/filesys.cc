@@ -51,11 +51,11 @@
 
 #ifdef FILESYS_STUB
 
-#define VALID_SLOT(slot) (slot >= RESERVED_FD && slot < GlobalFileTableSize && fileTable[slot] != NULL)
+#define VALID_SLOT(slot) (slot >= RESERVED_FD && slot < GlobalFileTableSize && table[slot] != NULL)
 
-int FileSystem::findFreeSlot() {
+int FileSystem::findFreeSlot() const {
   for (int i = RESERVED_FD; i < GlobalFileTableSize; i++) {
-    if (fileTable[i] == NULL) {
+    if (table[i] == NULL) {
       return i;
     }
   }
@@ -64,14 +64,16 @@ int FileSystem::findFreeSlot() {
 }
 
 FileSystem::FileSystem() {
-  memset(fileTable, 0, sizeof(fileTable));
+  for (int i = 0; i < GlobalFileTableSize; i++) {
+    table[i] = NULL;
+  }
 }
 
 FileSystem::~FileSystem() {
   for (int i = 0; i < GlobalFileTableSize; i++) {
-    if (fileTable[i] != NULL) {
-      delete fileTable[i];
-      fileTable[i] = NULL;
+    if (table[i] != NULL) {
+      delete table[i];
+      table[i] = NULL;
     }
   }
 }
@@ -109,7 +111,7 @@ int FileSystem::Open(char *name, int mode) {
     return -1;
   }
 
-  fileTable[slot] = new OpenFile(fd, mode, name, FALSE);
+  table[slot] = new OpenFile(fd, mode, name, FALSE);
   return slot;
 }
 
@@ -117,18 +119,18 @@ bool FileSystem::Close(int slot) {
   if (!VALID_SLOT(slot)) {
     return FALSE;
   }
-  delete fileTable[slot];
-  fileTable[slot] = NULL;
+  delete table[slot];
+  table[slot] = NULL;
   return TRUE;
 }
 
 bool FileSystem::Remove(char *name) {
   // Check if file is opened
   for (int i = 2; i < GlobalFileTableSize; i++) {
-    if (fileTable[i] == NULL) {
+    if (table[i] == NULL) {
       continue;
     }
-    if (strcmp(fileTable[i]->fileName(), name) == 0) {
+    if (strcmp(table[i]->fileName(), name) == 0) {
       return FALSE;
     }
   }
@@ -153,7 +155,7 @@ int FileSystem::Read(int slot, char *buffer, int count) {
     return -1;
   }
 
-  return fileTable[slot]->Read(buffer, count);
+  return table[slot]->Read(buffer, count);
 }
 
 int FileSystem::Write(int slot, char *buffer, int count) {
@@ -169,20 +171,20 @@ int FileSystem::Write(int slot, char *buffer, int count) {
     return -1;
   }
 
-  if (fileTable[slot]->mode() == MODE_READ) {
+  if (table[slot]->mode() == MODE_READ) {
     DEBUG(dbgFile, "Can not write to file id " << slot);
     return -1;
   }
 
-  return fileTable[slot]->Write(buffer, count);
+  return table[slot]->Write(buffer, count);
 }
 
-int FileSystem::Seek(int position, int slot) {
+int FileSystem::Seek(int slot, int pos) {
   if (!VALID_SLOT(slot)) {
     return -1;
   }
 
-  return fileTable[slot]->Seek(position);
+  return table[slot]->Seek(pos);
 }
 
 int FileSystem::CreateTCPSocket() {
@@ -196,41 +198,41 @@ int FileSystem::CreateTCPSocket() {
     return -1;
   }
 
-  fileTable[slot] = new OpenFile(fd, MODE_READWRITE, NULL, TRUE);
+  table[slot] = new OpenFile(fd, MODE_READWRITE, NULL, TRUE);
   return slot;
 }
 
 int FileSystem::ConnectTCPSocket(int slot, char *ip, int port) {
-  if (!VALID_SLOT(slot) || !fileTable[slot]->isSocket()) {
+  if (!VALID_SLOT(slot) || !table[slot]->isSocket()) {
     return -1;
   }
 
-  return Connect(fileTable[slot]->fd(), ip, port);
+  return Connect(table[slot]->fd(), ip, port);
 };
 
 int FileSystem::SendData(int slot, char *buffer, int count) {
-  if (!VALID_SLOT(slot) || !fileTable[slot]->isSocket()) {
+  if (!VALID_SLOT(slot) || !table[slot]->isSocket()) {
     return -1;
   }
 
-  return fileTable[slot]->Write(buffer, count);
+  return table[slot]->Write(buffer, count);
 }
 
 int FileSystem::ReceiveData(int slot, char *buffer, int count) {
-  if (!VALID_SLOT(slot) || !fileTable[slot]->isSocket()) {
+  if (!VALID_SLOT(slot) || !table[slot]->isSocket()) {
     return -1;
   }
 
-  return fileTable[slot]->Read(buffer, count);
+  return table[slot]->Read(buffer, count);
 }
 
 bool FileSystem::CloseTCPSocket(int slot) {
-  if (!VALID_SLOT(slot) || !fileTable[slot]->isSocket()) {
+  if (!VALID_SLOT(slot) || !table[slot]->isSocket()) {
     return FALSE;
   }
 
-  delete fileTable[slot];
-  fileTable[slot] = NULL;
+  delete table[slot];
+  table[slot] = NULL;
   return TRUE;
 }
 

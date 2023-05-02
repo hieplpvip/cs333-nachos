@@ -49,9 +49,9 @@ const int GlobalFileTableSize = NumOpenFilesPerProcess * NumProcesses;
 
 class FileSystem {
 private:
-  OpenFile *fileTable[GlobalFileTableSize];
+  OpenFile *table[GlobalFileTableSize];
 
-  int findFreeSlot();
+  int findFreeSlot() const;
 
 public:
   FileSystem();

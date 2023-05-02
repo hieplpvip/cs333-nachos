@@ -1,11 +1,13 @@
 // pcb.cc
 
 #include "pcb.h"
+#include "constant.h"
 #include "synch.h"
 #include "thread.h"
 
 PCB::PCB(int pid, int _parentId) {
   filename = NULL;
+  fileTable = new FileTable();
   joinSem = new Semaphore("joinSem", 0);
   exitSem = new Semaphore("exitSem", 0);
   thread = NULL;
@@ -19,6 +21,7 @@ PCB::~PCB() {
   // It is the job of the scheduler (see Scheduler::CheckToBeDestroyed)
 
   delete[] filename;
+  delete fileTable;
   delete joinSem;
   delete exitSem;
 }
@@ -59,6 +62,10 @@ int PCB::GetProcessID() const {
 
 int PCB::GetParentID() const {
   return parentID;
+}
+
+FileTable* PCB::GetFileTable() const {
+  return fileTable;
 }
 
 void PCB::JoinWait() {

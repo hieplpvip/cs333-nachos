@@ -51,6 +51,12 @@ PCB* ProcessTable::GetPCB(int pid) const {
   return table[pid];
 }
 
+PCB* ProcessTable::GetCurrentPCB() const {
+  int pid = kernel->currentThread->getProcessID();
+  ASSERT(IsValidPID(pid));
+  return table[pid];
+}
+
 int ProcessTable::ExecV(int argc, char** argv) {
   if (argc <= 0) {
     return -1;

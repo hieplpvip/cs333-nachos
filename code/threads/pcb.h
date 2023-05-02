@@ -3,6 +3,8 @@
 #ifndef PCB_H
 #define PCB_H
 
+#include "ftable.h"
+
 class Semaphore;
 class Thread;
 
@@ -11,6 +13,7 @@ private:
   char* filename;
   Semaphore* joinSem;
   Semaphore* exitSem;
+  FileTable* fileTable;
   int processID;
   int parentID;
   int exitCode;
@@ -24,11 +27,14 @@ public:
   // Start the process
   int Execute(int argc, char** argv);
 
-  // Return the PID of the current process
+  // Return the PID of this process
   int GetProcessID() const;
 
   // Return the PID of the parent process
   int GetParentID() const;
+
+  // Return the file table of this process
+  FileTable* GetFileTable() const;
 
   // The parent process wait for the child process finishes
   void JoinWait();

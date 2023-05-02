@@ -24,7 +24,11 @@ public:
   // Check if the PID is valid
   bool IsValidPID(int pid) const;
 
+  // Get the PCB of the process with PID = pid
   PCB* GetPCB(int pid) const;
+
+  // Get the PCB of the current process
+  PCB* GetCurrentPCB() const;
 
   // Fork and exec a new process
   int ExecV(int argc, char** argv);
