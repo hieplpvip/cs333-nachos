@@ -348,10 +348,35 @@ void ExceptionHandler(ExceptionType which) {
 
   DEBUG(dbgSys, "Received Exception " << which << " type: " << type << "\n");
 
+  // For fatal exceptions, just kill the user process
+  // so that it does not bring down the whole OS
   switch (which) {
-    case NoException: {
+    case NoException:
       return;
-    }
+
+    case PageFaultException:
+      SysExit(135);  // SIGBUS
+      ASSERTNOTREACHED();
+
+    case ReadOnlyException:
+      SysExit(139);  // SIGSEGV
+      ASSERTNOTREACHED();
+
+    case BusErrorException:
+      SysExit(135);  // SIGBUS
+      ASSERTNOTREACHED();
+
+    case AddressErrorException:
+      SysExit(135);  // SIGBUS
+      ASSERTNOTREACHED();
+
+    case OverflowException:
+      SysExit(136);  // SIGFPE
+      ASSERTNOTREACHED();
+
+    case IllegalInstrException:
+      SysExit(132);  // SIGILL
+      ASSERTNOTREACHED();
 
     case SyscallException:
       switch (type) {
