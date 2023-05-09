@@ -3,7 +3,8 @@
 
 int main() {
   SpaceId newProc;
-  int i, argc, empty;
+  int i, argc, empty, exitCode;
+  char exitCodeChar[3];
   char prompt[2], buffer[101];
   char* argv[10];
 
@@ -47,7 +48,21 @@ int main() {
       }
 
       newProc = ExecV(argc, argv);
-      Join(newProc);
+      exitCode = Join(newProc);
+      if (exitCode != 0) {
+        if (exitCode == -1) {
+          exitCodeChar[0] = '-';
+          exitCodeChar[1] = '-1';
+          exitCodeChar[2] = '\0';
+        } else {
+          exitCodeChar[0] = exitCode / 10 / 10 % 10 + '0';
+          exitCodeChar[1] = exitCode / 10 % 10 + '0';
+          exitCodeChar[2] = exitCode % 10 + '0';
+        }
+        Write("Exit Code: ", 11, ConsoleOutputId);
+        Write(exitCodeChar, 3, ConsoleOutputId);
+        Write("\n", 1, ConsoleOutputId);
+      }
     }
   }
 }
