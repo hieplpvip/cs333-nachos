@@ -46,7 +46,7 @@
 
 class ConsoleInput : public CallBackObj {
 public:
-  ConsoleInput(char *readFile, CallBackObj *toCall);
+  ConsoleInput(const char *readFile, CallBackObj *toCall);
   // initialize hardware console input
   ~ConsoleInput();  // clean up console emulation
 
@@ -69,7 +69,7 @@ private:
 
 class ConsoleOutput : public CallBackObj {
 public:
-  ConsoleOutput(char *writeFile, CallBackObj *toCall);
+  ConsoleOutput(const char *writeFile, CallBackObj *toCall);
   // initialize hardware console output
   ~ConsoleOutput();  // clean up console emulation
 

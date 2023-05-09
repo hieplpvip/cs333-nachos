@@ -1,17 +1,17 @@
-/* coff2noff.c 
+/* coff2noff.c
  *
  * This program reads in a COFF format file, and outputs a NOFF format file.
  * The NOFF format is essentially just a simpler version of the COFF file,
  * recording where each segment is in the NOFF file, and where it is to
  * go in the virtual address space.
- * 
+ *
  * Assumes coff file is linked with either
- *	gld with -N -Ttext 0 
+ *	gld with -N -Ttext 0
  * 	ld with  -N -T 0
  * to make sure the object file has no shared text.
  *
  * Also assumes that the COFF file has at most 3 segments:
- *	.text	-- read-only executable instructions 
+ *	.text	-- read-only executable instructions
  *	.data	-- initialized data
  *	.bss/.sbss -- uninitialized data (should be zero'd on program startup)
 #ifdef RDATA
@@ -21,11 +21,11 @@
  *
  *
  * Copyright (c) 1992-1993 The Regents of the University of California.
- * All rights reserved.  See copyright.h for copyright notice and limitation 
+ * All rights reserved.  See copyright.h for copyright notice and limitation
  * of liability and disclaimer of warranty provisions.
  */
 
-/* 
+/*
  * Modified at UW by KMS, August, 1997
  *   The modified program always writes the NOFF header in little-endian
  *    format, rather than host format.  This is to avoid the problem
@@ -137,7 +137,7 @@ void Read(int fd, char *buf, int nBytes) {
 }
 
 /* write and check for error */
-void Write(int fd, char *buf, int nBytes) {
+void Write(int fd, const char *buf, int nBytes) {
   if (write(fd, buf, nBytes) != nBytes) {
     fprintf(stderr, "Unable to write file\n");
     unlink(noffFileName);
@@ -258,7 +258,7 @@ int main(int argc, char **argv) {
       inNoffFile += sections[i].s_size;
 #endif
     } else if (!strcmp(sections[i].s_name, ".bss")) {
-      /* need to check if we have both .bss and .sbss -- make sure they 
+      /* need to check if we have both .bss and .sbss -- make sure they
 	     * are contiguous
 	     */
       if (noffH.uninitData.size != 0) {
@@ -286,7 +286,7 @@ int main(int argc, char **argv) {
   // writing it to the file
   SwapHeader(&noffH);
 
-  Write(fdOut, (char *)&noffH, sizeof(NoffHeader));
+  Write(fdOut, (const char *)&noffH, sizeof(NoffHeader));
   close(fdIn);
   close(fdOut);
   exit(0);

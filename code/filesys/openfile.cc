@@ -17,7 +17,7 @@
 
 #ifdef FILESYS_STUB
 
-OpenFile::OpenFile(int __fd, int __mode, char *__fileName, bool __isSocket) {
+OpenFile::OpenFile(int __fd, int __mode, const char *__fileName, bool __isSocket) {
   _fd = __fd;
   _mode = __mode;
   _currentOffset = 0;
@@ -43,7 +43,7 @@ int OpenFile::mode() const {
   return _mode;
 }
 
-char *OpenFile::fileName() const {
+const char *OpenFile::fileName() const {
   return _fileName;
 }
 
@@ -60,7 +60,7 @@ int OpenFile::ReadAt(char *into, int numBytes, int position) {
   return ReadPartial(_fd, into, numBytes);
 }
 
-int OpenFile::WriteAt(char *from, int numBytes, int position) {
+int OpenFile::WriteAt(const char *from, int numBytes, int position) {
   if (_isSocket) {
     return -1;
   }
@@ -79,7 +79,7 @@ int OpenFile::Read(char *into, int numBytes) {
   return numRead;
 }
 
-int OpenFile::Write(char *from, int numBytes) {
+int OpenFile::Write(const char *from, int numBytes) {
   if (_isSocket) {
     return Send(_fd, from, numBytes);
   }
@@ -173,7 +173,7 @@ int OpenFile::Read(char *into, int numBytes) {
   return result;
 }
 
-int OpenFile::Write(char *into, int numBytes) {
+int OpenFile::Write(const char *from, int numBytes) {
   int result = WriteAt(into, numBytes, seekPosition);
   seekPosition += result;
   return result;
@@ -232,7 +232,7 @@ int OpenFile::ReadAt(char *into, int numBytes, int position) {
   return numBytes;
 }
 
-int OpenFile::WriteAt(char *from, int numBytes, int position) {
+int OpenFile::WriteAt(const char *from, int numBytes, int position) {
   int fileLength = hdr->FileLength();
   int i, firstSector, lastSector, numSectors;
   bool firstAligned, lastAligned;

@@ -53,11 +53,11 @@ Disk::Disk(CallBackObj *toCall) {
   } else {  // file doesn't exist, create it
     fileno = OpenForWrite(diskname, TRUE);
     magicNum = MagicNumber;
-    WriteFile(fileno, (char *)&magicNum, MagicSize);  // write magic number
+    WriteFile(fileno, (const char *)&magicNum, MagicSize);  // write magic number
 
     // need to write at end of file, so that reads will not return EOF
     Lseek(fileno, DiskSize - sizeof(int), 0);
-    WriteFile(fileno, (char *)&tmp, sizeof(int));
+    WriteFile(fileno, (const char *)&tmp, sizeof(int));
   }
   active = FALSE;
 }
@@ -78,7 +78,7 @@ Disk::~Disk() {
 //----------------------------------------------------------------------
 
 static void
-PrintSector(bool writing, int sector, char *data) {
+PrintSector(bool writing, int sector, const char *data) {
   int *p = (int *)data;
 
   if (writing)
@@ -124,7 +124,7 @@ void Disk::ReadRequest(int sectorNumber, char *data) {
   kernel->interrupt->Schedule(this, ticks, DiskInt);
 }
 
-void Disk::WriteRequest(int sectorNumber, char *data) {
+void Disk::WriteRequest(int sectorNumber, const char *data) {
   int ticks = ComputeLatency(sectorNumber, TRUE);
 
   ASSERT(!active);

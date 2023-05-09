@@ -22,8 +22,8 @@
 
 class SynchConsoleInput : public CallBackObj {
 public:
-  SynchConsoleInput(char *inputFile);  // Initialize the console device
-  ~SynchConsoleInput();                // Deallocate console device
+  SynchConsoleInput(const char *inputFile);  // Initialize the console device
+  ~SynchConsoleInput();                      // Deallocate console device
 
   char GetChar();  // Read a character, waiting if necessary
 
@@ -37,7 +37,7 @@ private:
 
 class SynchConsoleOutput : public CallBackObj {
 public:
-  SynchConsoleOutput(char *outputFile);  // Initialize the console device
+  SynchConsoleOutput(const char *outputFile);  // Initialize the console device
   ~SynchConsoleOutput();
 
   void PutChar(char ch);  // Write a character, waiting if necessary

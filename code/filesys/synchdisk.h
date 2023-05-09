@@ -38,7 +38,7 @@ public:
   // or written.  These call
   // Disk::ReadRequest/WriteRequest and
   // then wait until the request is done.
-  void WriteSector(int sectorNumber, char *data);
+  void WriteSector(int sectorNumber, const char *data);
 
   void CallBack();  // Called by the disk device interrupt
                     // handler, to signal that the

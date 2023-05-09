@@ -29,7 +29,7 @@
 //	"data" -- payload data
 //----------------------------------------------------------------------
 
-Mail::Mail(PacketHeader pktH, MailHeader mailH, char *msgData) {
+Mail::Mail(PacketHeader pktH, MailHeader mailH, const char *msgData) {
   ASSERT(mailH.length <= MaxMailSize);
 
   pktHdr = pktH;
@@ -88,7 +88,7 @@ PrintHeader(PacketHeader pktHdr, MailHeader mailHdr) {
 //	"data" -- payload message data
 //----------------------------------------------------------------------
 
-void MailBox::Put(PacketHeader pktHdr, MailHeader mailHdr, char *data) {
+void MailBox::Put(PacketHeader pktHdr, MailHeader mailHdr, const char *data) {
   Mail *mail = new Mail(pktHdr, mailHdr, data);
 
   messages->Append(mail);  // put on the end of the list of

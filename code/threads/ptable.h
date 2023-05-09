@@ -31,7 +31,7 @@ public:
   PCB* GetCurrentPCB() const;
 
   // Fork and exec a new process
-  int ExecV(int argc, char** argv);
+  int ExecV(int argc, char const* const* argv);
 
   // Process the syscall SC_Join
   int Join(int childPid);

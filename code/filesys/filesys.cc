@@ -78,7 +78,7 @@ FileSystem::~FileSystem() {
   }
 }
 
-OpenFile *FileSystem::Open(char *name) {
+OpenFile *FileSystem::Open(const char *name) {
   int fileDescriptor = OpenForReadWrite(name, FALSE);
   if (fileDescriptor == -1) {
     return NULL;
@@ -86,7 +86,7 @@ OpenFile *FileSystem::Open(char *name) {
   return new OpenFile(fileDescriptor, MODE_READ, name, FALSE);
 }
 
-bool FileSystem::Create(char *name) {
+bool FileSystem::Create(const char *name) {
   int fileDescriptor = OpenForWrite(name, FALSE);
   bool success = fileDescriptor >= 0;
   if (success) {
@@ -95,7 +95,7 @@ bool FileSystem::Create(char *name) {
   return success;
 }
 
-int FileSystem::Open(char *name, int mode) {
+int FileSystem::Open(const char *name, int mode) {
   int slot = findFreeSlot();
   if (slot == -1) {
     return -1;
@@ -124,7 +124,7 @@ bool FileSystem::Close(int slot) {
   return TRUE;
 }
 
-bool FileSystem::Remove(char *name) {
+bool FileSystem::Remove(const char *name) {
   // Check if file is opened
   for (int i = 2; i < GlobalFileTableSize; i++) {
     if (table[i] == NULL) {
@@ -158,7 +158,7 @@ int FileSystem::Read(int slot, char *buffer, int count) {
   return table[slot]->Read(buffer, count);
 }
 
-int FileSystem::Write(int slot, char *buffer, int count) {
+int FileSystem::Write(int slot, const char *buffer, int count) {
   if (slot == 1) {
     // Console Output
     for (int i = 0; i < count; i++) {
@@ -202,7 +202,7 @@ int FileSystem::CreateTCPSocket() {
   return slot;
 }
 
-int FileSystem::ConnectTCPSocket(int slot, char *ip, int port) {
+int FileSystem::ConnectTCPSocket(int slot, const char *ip, int port) {
   if (!VALID_SLOT(slot) || !table[slot]->isSocket()) {
     return -1;
   }
@@ -210,7 +210,7 @@ int FileSystem::ConnectTCPSocket(int slot, char *ip, int port) {
   return Connect(table[slot]->fd(), ip, port);
 };
 
-int FileSystem::SendData(int slot, char *buffer, int count) {
+int FileSystem::SendData(int slot, const char *buffer, int count) {
   if (!VALID_SLOT(slot) || !table[slot]->isSocket()) {
     return -1;
   }
@@ -361,7 +361,7 @@ FileSystem::FileSystem(bool format) {
 //	"initialSize" -- size of file to be created
 //----------------------------------------------------------------------
 
-bool FileSystem::Create(char *name, int initialSize) {
+bool FileSystem::Create(const char *name, int initialSize) {
   Directory *directory;
   PersistentBitmap *freeMap;
   FileHeader *hdr;
@@ -412,7 +412,7 @@ bool FileSystem::Create(char *name, int initialSize) {
 //----------------------------------------------------------------------
 
 OpenFile *
-FileSystem::Open(char *name) {
+FileSystem::Open(const char *name) {
   Directory *directory = new Directory(NumDirEntries);
   OpenFile *openFile = NULL;
   int sector;
@@ -440,7 +440,7 @@ FileSystem::Open(char *name) {
 //	"name" -- the text name of the file to be removed
 //----------------------------------------------------------------------
 
-bool FileSystem::Remove(char *name) {
+bool FileSystem::Remove(const char *name) {
   Directory *directory;
   PersistentBitmap *freeMap;
   FileHeader *fileHdr;

@@ -282,7 +282,7 @@ bool PollFile(int fd) {
 //	"name" -- file name
 //----------------------------------------------------------------------
 
-int OpenForRead(char *name, bool crashOnError) {
+int OpenForRead(const char *name, bool crashOnError) {
   int fd = open(name, O_RDONLY, 0666);
 
   ASSERT(!crashOnError || fd >= 0);
@@ -297,7 +297,7 @@ int OpenForRead(char *name, bool crashOnError) {
 //	"name" -- file name
 //----------------------------------------------------------------------
 
-int OpenForWrite(char *name, bool crashOnError) {
+int OpenForWrite(const char *name, bool crashOnError) {
   int fd = open(name, O_RDWR | O_CREAT | O_TRUNC, 0666);
 
   ASSERT(!crashOnError || fd >= 0);
@@ -312,7 +312,7 @@ int OpenForWrite(char *name, bool crashOnError) {
 //	"name" -- file name
 //----------------------------------------------------------------------
 
-int OpenForReadWrite(char *name, bool crashOnError) {
+int OpenForReadWrite(const char *name, bool crashOnError) {
   int fd = open(name, O_RDWR, 0);
 
   ASSERT(!crashOnError || fd >= 0);
@@ -344,7 +344,7 @@ int ReadPartial(int fd, char *buffer, int nBytes) {
 // 	Write characters to an open file.  Abort if write fails.
 //----------------------------------------------------------------------
 
-void WriteFile(int fd, char *buffer, int nBytes) {
+void WriteFile(int fd, const char *buffer, int nBytes) {
   int retVal = write(fd, buffer, nBytes);
   ASSERT(retVal == nBytes);
 }
@@ -355,7 +355,7 @@ void WriteFile(int fd, char *buffer, int nBytes) {
 //	written.
 //----------------------------------------------------------------------
 
-int WritePartial(int fd, char *buffer, int nBytes) {
+int WritePartial(int fd, const char *buffer, int nBytes) {
   return write(fd, buffer, nBytes);
 }
 
@@ -399,7 +399,7 @@ int Close(int fd) {
 // 	Delete a file.
 //----------------------------------------------------------------------
 
-bool Unlink(char *name) {
+bool Unlink(const char *name) {
   return unlink(name);
 }
 
@@ -426,7 +426,7 @@ int OpenSocketInternet() {
 // Connect
 // 	Connect to IP Port
 //----------------------------------------------------------------------
-int Connect(int fd, char *ip, int port) {
+int Connect(int fd, const char *ip, int port) {
   sockaddr_in serv_addr;
   serv_addr.sin_family = AF_INET;
   serv_addr.sin_port = htons(port);
@@ -445,7 +445,7 @@ void CloseSocket(int sockID) {
   close(sockID);
 }
 
-int Send(int fd, char *buffer, int len) {
+int Send(int fd, const char *buffer, int len) {
   return send(fd, buffer, len, 0);
 }
 
@@ -459,7 +459,7 @@ int Receive(int fd, char *buffer, int len) {
 //----------------------------------------------------------------------
 
 static void
-InitSocketName(struct sockaddr_un *uname, char *name) {
+InitSocketName(struct sockaddr_un *uname, const char *name) {
   uname->sun_family = AF_UNIX;
   strcpy(uname->sun_path, name);
 }
@@ -470,7 +470,7 @@ InitSocketName(struct sockaddr_un *uname, char *name) {
 //	can locate the port.
 //----------------------------------------------------------------------
 
-void AssignNameToSocket(char *socketName, int sockID) {
+void AssignNameToSocket(const char *socketName, int sockID) {
   struct sockaddr_un uName;
   int retVal;
 
@@ -486,7 +486,7 @@ void AssignNameToSocket(char *socketName, int sockID) {
 // DeAssignNameToSocket
 // 	Delete the UNIX file name we assigned to our IPC port, on cleanup.
 //----------------------------------------------------------------------
-void DeAssignNameToSocket(char *socketName) {
+void DeAssignNameToSocket(const char *socketName) {
   (void)unlink(socketName);
 }
 
@@ -538,7 +538,7 @@ void ReadFromSocket(int sockID, char *buffer, int packetSize) {
 //      to get set up.
 //      Terminate if we still fail after 10 tries.
 //----------------------------------------------------------------------
-void SendToSocket(int sockID, char *buffer, int packetSize, char *toName) {
+void SendToSocket(int sockID, const char *buffer, int packetSize, const char *toName) {
   struct sockaddr_un uName;
   int retVal;
   int retryCount;

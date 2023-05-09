@@ -84,13 +84,13 @@ typedef int ThreadId;
 /* Run the specified executable, with no args */
 /* This can be implemented as a call to ExecV.
  */
-SpaceId Exec(char *exec_name);
+SpaceId Exec(const char *exec_name);
 
 /* Run the executable, stored in the Nachos file "argv[0]", with
  * parameters stored in argv[1..argc-1] and return the
  * address space identifier
  */
-SpaceId ExecV(int argc, char *argv[]);
+SpaceId ExecV(int argc, char const *const *argv);
 
 /* Only return once the user program "id" has finished.
  * Return the exit status.
@@ -120,26 +120,26 @@ typedef int OpenFileId;
 
 /* Print null-terminated string to the console.
  */
-int PrintString(char *s);
+int PrintString(const char *s);
 
 /* Create a Nachos file, with name "name" */
 /* Note: Create does not open the file.   */
 /* Return 1 on success, negative error code on failure */
-int Create(char *name);
+int Create(const char *name);
 
 /* Remove a Nachos file, with name "name" */
-int Remove(char *name);
+int Remove(const char *name);
 
 /* Open the Nachos file "name", and return an "OpenFileId" that can
  * be used to read and write to the file.
  */
-OpenFileId Open(char *name, int type);
+OpenFileId Open(const char *name, int type);
 
 /* Write "size" bytes from "buffer" to the open file.
  * Return the number of bytes actually read on success.
  * On failure, a negative error code is returned.
  */
-int Write(char *buffer, int count, OpenFileId id);
+int Write(const char *buffer, int count, OpenFileId id);
 
 /* Read "size" bytes from the open file into "buffer".
  * Return the number of bytes actually read -- if the open file isn't
@@ -189,9 +189,9 @@ void ThreadExit(int ExitCode);
 
 int SocketTCP();
 
-int Connect(int socketid, char *ip, int port);
+int Connect(int socketid, const char *ip, int port);
 
-int Send(int socketid, char *buffer, int len);
+int Send(int socketid, const char *buffer, int len);
 
 int Receive(int socketid, char *buffer, int len);
 

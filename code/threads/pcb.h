@@ -25,7 +25,7 @@ public:
   ~PCB();
 
   // Start the process
-  int Execute(int argc, char** argv);
+  int Execute(int argc, char const* const* argv);
 
   // Return the PID of this process
   int GetProcessID() const;

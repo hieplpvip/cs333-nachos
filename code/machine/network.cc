@@ -149,7 +149,7 @@ void NetworkOutput::CallBack() {
 // 	the socket, because it's simpler at the receive end.
 //-----------------------------------------------------------------------
 
-void NetworkOutput::Send(PacketHeader hdr, char *data) {
+void NetworkOutput::Send(PacketHeader hdr, const char *data) {
   char toName[32];
 
   sprintf(toName, "SOCKET_%d", (int)hdr.to);

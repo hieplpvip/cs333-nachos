@@ -25,7 +25,7 @@
 //		from the keyboard
 //----------------------------------------------------------------------
 
-ConsoleInput::ConsoleInput(char *readFile, CallBackObj *toCall) {
+ConsoleInput::ConsoleInput(const char *readFile, CallBackObj *toCall) {
   if (readFile == NULL)
     readFileNo = 0;  // keyboard = stdin
   else
@@ -111,7 +111,7 @@ char ConsoleInput::GetChar() {
 //	the display completes.
 //----------------------------------------------------------------------
 
-ConsoleOutput::ConsoleOutput(char *writeFile, CallBackObj *toCall) {
+ConsoleOutput::ConsoleOutput(const char *writeFile, CallBackObj *toCall) {
   if (writeFile == NULL)
     writeFileNo = 1;  // display = stdout
   else

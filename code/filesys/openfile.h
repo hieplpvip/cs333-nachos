@@ -34,18 +34,18 @@
 
 class OpenFile {
 public:
-  OpenFile(int fd, int mode, char *filename, bool isSocket);
+  OpenFile(int fd, int mode, const char *filename, bool isSocket);
   ~OpenFile();
 
   int fd() const;
   int mode() const;
-  char *fileName() const;
+  const char *fileName() const;
   bool isSocket() const;
 
   int ReadAt(char *into, int numBytes, int position);
-  int WriteAt(char *from, int numBytes, int position);
+  int WriteAt(const char *from, int numBytes, int position);
   int Read(char *into, int numBytes);
-  int Write(char *from, int numBytes);
+  int Write(const char *from, int numBytes);
   int Seek(int position);
   int Length();
 
@@ -73,12 +73,12 @@ public:
                                        // starting at the implicit position.
                                        // Return the # actually read/written,
                                        // and increment position in file.
-  int Write(char *from, int numBytes);
+  int Write(const char *from, int numBytes);
 
   int ReadAt(char *into, int numBytes, int position);
   // Read/write bytes from the file,
   // bypassing the implicit position.
-  int WriteAt(char *from, int numBytes, int position);
+  int WriteAt(const char *from, int numBytes, int position);
 
   int Length();  // Return the number of bytes in the
                  // file (this interface is simpler

@@ -17,7 +17,7 @@
 //              otherwise, read from this file
 //----------------------------------------------------------------------
 
-SynchConsoleInput::SynchConsoleInput(char *inputFile) {
+SynchConsoleInput::SynchConsoleInput(const char *inputFile) {
   consoleInput = new ConsoleInput(inputFile, this);
   lock = new Lock("console in");
   waitFor = new Semaphore("console in", 0);
@@ -67,7 +67,7 @@ void SynchConsoleInput::CallBack() {
 //              otherwise, read from this file
 //----------------------------------------------------------------------
 
-SynchConsoleOutput::SynchConsoleOutput(char *outputFile) {
+SynchConsoleOutput::SynchConsoleOutput(const char *outputFile) {
   consoleOutput = new ConsoleOutput(outputFile, this);
   lock = new Lock("console out");
   waitFor = new Semaphore("console out", 0);

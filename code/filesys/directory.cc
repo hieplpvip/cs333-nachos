@@ -69,7 +69,7 @@ void Directory::FetchFrom(OpenFile *file) {
 //----------------------------------------------------------------------
 
 void Directory::WriteBack(OpenFile *file) {
-  (void)file->WriteAt((char *)table, tableSize * sizeof(DirectoryEntry), 0);
+  (void)file->WriteAt((const char *)table, tableSize * sizeof(DirectoryEntry), 0);
 }
 
 //----------------------------------------------------------------------
@@ -80,7 +80,7 @@ void Directory::WriteBack(OpenFile *file) {
 //	"name" -- the file name to look up
 //----------------------------------------------------------------------
 
-int Directory::FindIndex(char *name) {
+int Directory::FindIndex(const char *name) {
   for (int i = 0; i < tableSize; i++)
     if (table[i].inUse && !strncmp(table[i].name, name, FileNameMaxLen))
       return i;
@@ -96,7 +96,7 @@ int Directory::FindIndex(char *name) {
 //	"name" -- the file name to look up
 //----------------------------------------------------------------------
 
-int Directory::Find(char *name) {
+int Directory::Find(const char *name) {
   int i = FindIndex(name);
 
   if (i != -1)
@@ -115,7 +115,7 @@ int Directory::Find(char *name) {
 //	"newSector" -- the disk sector containing the added file's header
 //----------------------------------------------------------------------
 
-bool Directory::Add(char *name, int newSector) {
+bool Directory::Add(const char *name, int newSector) {
   if (FindIndex(name) != -1)
     return FALSE;
 
@@ -137,7 +137,7 @@ bool Directory::Add(char *name, int newSector) {
 //	"name" -- the file name to be removed
 //----------------------------------------------------------------------
 
-bool Directory::Remove(char *name) {
+bool Directory::Remove(const char *name) {
   int i = FindIndex(name);
 
   if (i == -1)

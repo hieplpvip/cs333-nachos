@@ -16,17 +16,17 @@ public:
   FileTable();
   ~FileTable();
 
-  bool Create(char *name);
-  int Open(char *name, int mode);
+  bool Create(const char *name);
+  int Open(const char *name, int mode);
   bool Close(int slot);
-  bool Remove(char *name);
+  bool Remove(const char *name);
   int Read(int slot, char *buffer, int count);
-  int Write(int slot, char *buffer, int count);
+  int Write(int slot, const char *buffer, int count);
   int Seek(int slot, int pos);
 
   int CreateTCPSocket();
-  int ConnectTCPSocket(int slot, char *ip, int port);
-  int SendData(int slot, char *buffer, int count);
+  int ConnectTCPSocket(int slot, const char *ip, int port);
+  int SendData(int slot, const char *buffer, int count);
   int ReceiveData(int slot, char *buffer, int count);
   bool CloseTCPSocket(int slot);
 };

@@ -43,17 +43,17 @@ extern bool PollFile(int fd);
 
 // File operations: open/read/write/lseek/close, and check for error
 // For simulating the disk and the console devices.
-extern int OpenForWrite(char *name, bool crashOnError);
-extern int OpenForRead(char *name, bool crashOnError);
-extern int OpenForReadWrite(char *name, bool crashOnError);
+extern int OpenForWrite(const char *name, bool crashOnError);
+extern int OpenForRead(const char *name, bool crashOnError);
+extern int OpenForReadWrite(const char *name, bool crashOnError);
 extern void ReadFile(int fd, char *buffer, int nBytes);
 extern int ReadPartial(int fd, char *buffer, int nBytes);
-extern void WriteFile(int fd, char *buffer, int nBytes);
-extern int WritePartial(int fd, char *buffer, int nBytes);
+extern void WriteFile(int fd, const char *buffer, int nBytes);
+extern int WritePartial(int fd, const char *buffer, int nBytes);
 extern void Lseek(int fd, int offset, int whence);
 extern int Tell(int fd);
 extern int Close(int fd);
-extern bool Unlink(char *name);
+extern bool Unlink(const char *name);
 
 // Other C library routines that are used by Nachos.
 // These are assumed to be portable, so we don't include a wrapper.
@@ -68,14 +68,14 @@ void bzero(void *s, size_t n);
 // Interprocess communication operations, for simulating the network
 extern int OpenSocket();
 extern int OpenSocketInternet();
-extern int Connect(int fd, char *ip, int port);
-extern int Send(int fd, char *buffer, int len);
+extern int Connect(int fd, const char *ip, int port);
+extern int Send(int fd, const char *buffer, int len);
 extern int Receive(int fd, char *buffer, int len);
 extern void CloseSocket(int sockID);
-extern void AssignNameToSocket(char *socketName, int sockID);
-extern void DeAssignNameToSocket(char *socketName);
+extern void AssignNameToSocket(const char *socketName, int sockID);
+extern void DeAssignNameToSocket(const char *socketName);
 extern bool PollSocket(int sockID);
 extern void ReadFromSocket(int sockID, char *buffer, int packetSize);
-extern void SendToSocket(int sockID, char *buffer, int packetSize, char *toName);
+extern void SendToSocket(int sockID, const char *buffer, int packetSize, const char *toName);
 
 #endif  // SYSDEP_H

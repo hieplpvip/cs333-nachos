@@ -94,7 +94,7 @@ AddrSpace::~AddrSpace() {
 //	"fileName" is the file containing the object code to load into memory
 //----------------------------------------------------------------------
 
-bool AddrSpace::Load(char *fileName, int argc, char **argv) {
+bool AddrSpace::Load(const char *fileName, int argc, char const *const *argv) {
   OpenFile *executable = kernel->fileSystem->Open(fileName);
   NoffHeader noffH;
   unsigned int size;
@@ -339,7 +339,7 @@ void AddrSpace::CopyFromFile(OpenFile *file, int inFileAddr, int size, int virtu
   }
 }
 
-void AddrSpace::CopyFromBuffer(char *buf, int size, int virtualAddr) {
+void AddrSpace::CopyFromBuffer(const char *buf, int size, int virtualAddr) {
   while (size > 0) {
     int vpn = virtualAddr / PageSize;
     int offset = virtualAddr % PageSize;

@@ -57,18 +57,18 @@ public:
   FileSystem();
   ~FileSystem();
 
-  OpenFile *Open(char *name);
-  bool Create(char *name);
-  int Open(char *name, int mode);
+  OpenFile *Open(const char *name);
+  bool Create(const char *name);
+  int Open(const char *name, int mode);
   bool Close(int slot);
-  bool Remove(char *name);
+  bool Remove(const char *name);
   int Read(int slot, char *buffer, int count);
-  int Write(int slot, char *buffer, int count);
+  int Write(int slot, const char *buffer, int count);
   int Seek(int slot, int pos);
 
   int CreateTCPSocket();
-  int ConnectTCPSocket(int slot, char *ip, int port);
-  int SendData(int slot, char *buffer, int count);
+  int ConnectTCPSocket(int slot, const char *ip, int port);
+  int SendData(int slot, const char *buffer, int count);
   int ReceiveData(int slot, char *buffer, int count);
   bool CloseTCPSocket(int slot);
 };
@@ -83,12 +83,12 @@ public:
                             // the disk, so initialize the directory
                             // and the bitmap of free blocks.
 
-  bool Create(char* name, int initialSize);
+  bool Create(const char* name, int initialSize);
   // Create a file (UNIX creat)
 
-  OpenFile* Open(char* name);  // Open a file (UNIX open)
+  OpenFile* Open(const char* name);  // Open a file (UNIX open)
 
-  bool Remove(char* name);  // Delete a file (UNIX unlink)
+  bool Remove(const char* name);  // Delete a file (UNIX unlink)
 
   void List();  // List all the files in the file system
 

@@ -88,7 +88,7 @@ void FileHeader::FetchFrom(int sector) {
 //----------------------------------------------------------------------
 
 void FileHeader::WriteBack(int sector) {
-  kernel->synchDisk->WriteSector(sector, (char *)this);
+  kernel->synchDisk->WriteSector(sector, (const char *)this);
 }
 
 //----------------------------------------------------------------------

@@ -25,7 +25,7 @@ int SysAdd(int op1, int op2) {
   return op1 + op2;
 }
 
-int SysPrintString(char* s) {
+int SysPrintString(const char* s) {
   DEBUG(dbgSys, "Print string");
 
   while (*s != '\0') {
@@ -35,7 +35,7 @@ int SysPrintString(char* s) {
   return 0;
 }
 
-int SysCreate(char* filename) {
+int SysCreate(const char* filename) {
   DEBUG(dbgSys, "Create file " << filename);
 
   if (!kernel->processTable->GetCurrentPCB()->GetFileTable()->Create(filename)) {
@@ -45,7 +45,7 @@ int SysCreate(char* filename) {
   return 0;
 }
 
-int SysOpen(char* filename, int mode) {
+int SysOpen(const char* filename, int mode) {
   DEBUG(dbgSys, "Open file " << filename);
 
   int result = kernel->processTable->GetCurrentPCB()->GetFileTable()->Open(filename, mode);
@@ -77,7 +77,7 @@ int SysRead(char* buffer, int count, int fileId) {
   return kernel->processTable->GetCurrentPCB()->GetFileTable()->Read(fileId, buffer, count);
 }
 
-int SysWrite(char* buffer, int count, int fileId) {
+int SysWrite(const char* buffer, int count, int fileId) {
   DEBUG(dbgSys, "Write file id " << fileId);
 
   if (count <= 0) {
@@ -99,7 +99,7 @@ int SysSeek(int pos, int fileId) {
   return result;
 }
 
-int SysRemove(char* filename) {
+int SysRemove(const char* filename) {
   DEBUG(dbgSys, "Remove file " << filename);
 
   if (!kernel->processTable->GetCurrentPCB()->GetFileTable()->Remove(filename)) {
@@ -120,7 +120,7 @@ int SysOpenSocket() {
   return result;
 }
 
-int SysConnect(int socketId, char* ip, int port) {
+int SysConnect(int socketId, const char* ip, int port) {
   DEBUG(dbgSys, "Connect socket id " << socketId << " to " << ip << ":" << port);
 
   if (kernel->processTable->GetCurrentPCB()->GetFileTable()->ConnectTCPSocket(socketId, ip, port) == -1) {
@@ -130,7 +130,7 @@ int SysConnect(int socketId, char* ip, int port) {
   return 0;
 }
 
-int SysSend(int socketId, char* buffer, int count) {
+int SysSend(int socketId, const char* buffer, int count) {
   DEBUG(dbgSys, "Send data");
 
   int result = kernel->processTable->GetCurrentPCB()->GetFileTable()->SendData(socketId, buffer, count);
@@ -168,7 +168,7 @@ int SysCloseSocket(int socketId) {
   return 0;
 }
 
-int SysExecV(int argc, char** argv) {
+int SysExecV(int argc, char const* const* argv) {
   DEBUG(dbgSys, "ExecV " << argc << ' ' << argv[0]);
 
   return kernel->processTable->ExecV(argc, argv);

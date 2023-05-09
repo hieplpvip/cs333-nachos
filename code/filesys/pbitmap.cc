@@ -68,5 +68,5 @@ void PersistentBitmap::FetchFrom(OpenFile *file) {
 //----------------------------------------------------------------------
 
 void PersistentBitmap::WriteBack(OpenFile *file) {
-  file->WriteAt((char *)map, numWords * sizeof(unsigned), 0);
+  file->WriteAt((const char *)map, numWords * sizeof(unsigned), 0);
 }

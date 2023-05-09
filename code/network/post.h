@@ -63,7 +63,7 @@ public:
 
 class Mail {
 public:
-  Mail(PacketHeader pktH, MailHeader mailH, char *msgData);
+  Mail(PacketHeader pktH, MailHeader mailH, const char *msgData);
   // Initialize a mail message by
   // concatenating the headers to the data
 
@@ -82,7 +82,7 @@ public:
   MailBox();   // Allocate and initialize mail box
   ~MailBox();  // De-allocate mail box
 
-  void Put(PacketHeader pktHdr, MailHeader mailHdr, char *data);
+  void Put(PacketHeader pktHdr, MailHeader mailHdr, const char *data);
   // Atomically put a message into the mailbox
   void Get(PacketHeader *pktHdr, MailHeader *mailHdr, char *data);
   // Atomically get a message out of the

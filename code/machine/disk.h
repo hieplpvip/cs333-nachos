@@ -62,7 +62,7 @@ public:
   // These routines send a request to
   // the disk and return immediately.
   // Only one request allowed at a time!
-  void WriteRequest(int sectorNumber, char *data);
+  void WriteRequest(int sectorNumber, const char *data);
 
   void CallBack();  // Invoked when disk request
                     // finishes. In turn calls, callWhenDone.

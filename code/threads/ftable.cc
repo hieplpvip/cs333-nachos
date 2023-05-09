@@ -35,11 +35,11 @@ int FileTable::findFreeSlot() const {
   return -1;
 }
 
-bool FileTable::Create(char *name) {
+bool FileTable::Create(const char *name) {
   return kernel->fileSystem->Create(name);
 }
 
-int FileTable::Open(char *name, int mode) {
+int FileTable::Open(const char *name, int mode) {
   int slot = findFreeSlot();
   if (slot == -1) {
     return -1;
@@ -64,7 +64,7 @@ bool FileTable::Close(int slot) {
   return result;
 }
 
-bool FileTable::Remove(char *name) {
+bool FileTable::Remove(const char *name) {
   return kernel->fileSystem->Remove(name);
 }
 
@@ -76,7 +76,7 @@ int FileTable::Read(int slot, char *buffer, int count) {
   return kernel->fileSystem->Read(table[slot], buffer, count);
 }
 
-int FileTable::Write(int slot, char *buffer, int count) {
+int FileTable::Write(int slot, const char *buffer, int count) {
   if (!VALID_SLOT(slot)) {
     return -1;
   }
@@ -107,7 +107,7 @@ int FileTable::CreateTCPSocket() {
   return slot;
 }
 
-int FileTable::ConnectTCPSocket(int slot, char *ip, int port) {
+int FileTable::ConnectTCPSocket(int slot, const char *ip, int port) {
   if (!VALID_SLOT(slot)) {
     return -1;
   }
@@ -115,7 +115,7 @@ int FileTable::ConnectTCPSocket(int slot, char *ip, int port) {
   return kernel->fileSystem->ConnectTCPSocket(table[slot], ip, port);
 }
 
-int FileTable::SendData(int slot, char *buffer, int count) {
+int FileTable::SendData(int slot, const char *buffer, int count) {
   if (!VALID_SLOT(slot)) {
     return -1;
   }

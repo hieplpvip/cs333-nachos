@@ -32,7 +32,7 @@ void startProcess(void* arg) {
   ASSERTNOTREACHED();
 }
 
-int PCB::Execute(int argc, char** argv) {
+int PCB::Execute(int argc, char const* const* argv) {
   if (argc <= 0) {
     return -1;
   }

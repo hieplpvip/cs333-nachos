@@ -57,7 +57,7 @@ PCB* ProcessTable::GetCurrentPCB() const {
   return table[pid];
 }
 
-int ProcessTable::ExecV(int argc, char** argv) {
+int ProcessTable::ExecV(int argc, char const* const* argv) {
   if (argc <= 0) {
     return -1;
   }

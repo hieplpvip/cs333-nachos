@@ -21,9 +21,9 @@ public:
   AddrSpace();   // Create an address space
   ~AddrSpace();  // De-allocate an address space
 
-  bool Load(char *fileName, int argc, char **argv);  // Load a program with command-line arguments
-                                                     // into addr space from a file
-                                                     // return false if not found
+  bool Load(const char *fileName, int argc, char const *const *argv);  // Load a program with command-line arguments
+                                                                       // into addr space from a file
+                                                                       // return false if not found
 
   void Execute();  // Run a program
                    // assumes the program has already
@@ -56,7 +56,7 @@ private:
 
   // Copy `size` bytes starting from `buf` in kernel memory
   // to virtual memory starting from `virtualAddr`.
-  void CopyFromBuffer(char *buf, int size, int virtualAddr);
+  void CopyFromBuffer(const char *buf, int size, int virtualAddr);
 };
 
 #endif  // ADDRSPACE_H

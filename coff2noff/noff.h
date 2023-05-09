@@ -1,4 +1,4 @@
-/* noff.h 
+/* noff.h
  *     Data structures defining the Nachos Object Code Format
  *
  *     Basically, we only know about three types of segments:
@@ -23,6 +23,6 @@ typedef struct noffHeader {
   Segment readonlyData; /* read only data */
 #endif
   Segment uninitData; /* uninitialized data segment --
-				 * should be zero'ed before use 
+				 * should be zero'ed before use
 				 */
 } NoffHeader;
