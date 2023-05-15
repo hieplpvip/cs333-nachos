@@ -130,7 +130,8 @@ bool FileSystem::Remove(const char *name) {
     if (table[i] == NULL) {
       continue;
     }
-    if (strcmp(table[i]->fileName(), name) == 0) {
+    const char *fileName = table[i]->fileName();
+    if (strcmp(fileName, name) == 0) {
       return FALSE;
     }
   }

@@ -23,9 +23,12 @@ OpenFile::OpenFile(int __fd, int __mode, const char *__fileName, bool __isSocket
   _currentOffset = 0;
   _isSocket = __isSocket;
 
-  ASSERT(__fileName != NULL);
-  _fileName = new char[strlen(__fileName) + 1];
-  strcpy(_fileName, __fileName);
+  if (__fileName != NULL) {
+    _fileName = new char[strlen(__fileName) + 1];
+    strcpy(_fileName, __fileName);
+  } else {
+    _fileName = NULL;
+  }
 }
 
 OpenFile::~OpenFile() {
