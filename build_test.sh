@@ -18,4 +18,8 @@ make
 ../build.linux/nachos -x concatenate cat.c hello.c
 ../build.linux/nachos -x delete hello.c
 
+../build.linux/nachos -x testExecJoin
+../build.linux/nachos -x testSem false
+../build.linux/nachos -x testSem true
+
 #../build.linux/nachos -x echoclient

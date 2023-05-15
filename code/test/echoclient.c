@@ -41,6 +41,7 @@ int main() {
 
   // Close sockets
   for (i = 0; i < 4; i++) {
+    PrintString("Closing socket\n");
     CloseTCP(fd[i]);
   }
 

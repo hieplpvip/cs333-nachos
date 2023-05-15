@@ -112,7 +112,7 @@ ifeq ($(hosttype),unknown)
 PROGRAMS = unknownhost
 else
 # change this if you create a new test program!
-PROGRAMS = halt add shell sort segments matmult createfile cat copy delete concatenate echoclient fileclient div0 test
+PROGRAMS = halt add shell sort segments matmult createfile cat copy delete concatenate echoclient fileclient div0 testSem testSemChild1 testSemChild2 testExecJoin
 endif
 
 all: $(PROGRAMS)
@@ -204,11 +204,29 @@ div0: div0.o start.o
 	$(LD) $(LDFLAGS) start.o div0.o -o div0.coff
 	$(COFF2NOFF) div0.coff div0
 
-test.o: test.c
-	$(CC) $(CFLAGS) -c test.c
-test: test.o start.o
-	$(LD) $(LDFLAGS) start.o test.o -o test.coff
-	$(COFF2NOFF) test.coff test
+testSem.o: testSem.c
+	$(CC) $(CFLAGS) -c testSem.c
+testSem: testSem.o start.o
+	$(LD) $(LDFLAGS) start.o testSem.o -o testSem.coff
+	$(COFF2NOFF) testSem.coff testSem
+
+testSemChild1.o: testSemChild1.c
+	$(CC) $(CFLAGS) -c testSemChild1.c
+testSemChild1: testSemChild1.o start.o
+	$(LD) $(LDFLAGS) start.o testSemChild1.o -o testSemChild1.coff
+	$(COFF2NOFF) testSemChild1.coff testSemChild1
+
+testSemChild2.o: testSemChild2.c
+	$(CC) $(CFLAGS) -c testSemChild2.c
+testSemChild2: testSemChild2.o start.o
+	$(LD) $(LDFLAGS) start.o testSemChild2.o -o testSemChild2.coff
+	$(COFF2NOFF) testSemChild2.coff testSemChild2
+
+testExecJoin.o: testExecJoin.c
+	$(CC) $(CFLAGS) -c testExecJoin.c
+testExecJoin: testExecJoin.o start.o
+	$(LD) $(LDFLAGS) start.o testExecJoin.o -o testExecJoin.coff
+	$(COFF2NOFF) testExecJoin.coff testExecJoin
 
 clean:
 	$(RM) -f *.o *.ii
