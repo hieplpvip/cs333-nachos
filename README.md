@@ -1,6 +1,6 @@
 # CS333 Introduction to Operating Systems - NACHOS Projects
 
-Support both x86 and aarch64.
+Host must be Linux. Supports both x86 and aarch64.
 
 ## Setup
 
